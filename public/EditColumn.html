@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>网站信息</title>
+	<link rel="stylesheet" href="/static/lib/layui/css/layui.css">
+	<style>
+	/*reset*/
+	body,li,ul,h1,h2,h3,h4,h5,h6,p{
+		padding:0;
+		margin:0;
+		font-size:14px;
+	}
+	ul,li{
+		list-style:none;
+	}
+	a{
+		text-decoration: none;
+		color:#000;
+	}
+
+	/*导航*/
+	.nav{
+		padding: 15px 20px;
+	    box-shadow: 0 2px 4px rgba(0,0,0,.08);
+	    margin-bottom: 20px;
+	    position: fixed;
+	    z-index: 100;
+	    width: 100%;
+	    background: #fff;
+	}
+	.nav-ul{
+		overflow: hidden;
+	}
+	.nav-item{
+		float: left;
+		color:#606266;
+		font-size:15px;
+	}
+	.nav-link{
+		color:#303133;
+		font-weight: bold;
+	}
+
+
+	.main{
+		padding:60px 8px 0 8px;
+	}
+
+	.maxwidth{
+		max-width:300px;
+	}
+	.layui-form{
+		border:1px solid #eee;
+		border-bottom: none;
+	}
+	#UploadWatermark{
+		vertical-align: top;
+		border-radius:3px;
+	}
+	.watermarkImg{
+		height:38px;
+	}
+
+
+	.layui-nav{
+		padding:0 2px;
+		background: #fff;
+	}
+	.layui-nav .layui-nav-item a:hover, .layui-nav .layui-this a{
+		color:#333;
+	}
+	.layui-nav .layui-nav-item a{
+		color:#000;
+	}
+	.layui-nav .layui-nav-item{
+		line-height: 45px;
+	}
+	.layui-form-label{
+		width:120px;
+	}
+	.layui-input-block{
+		margin-left:150px;
+	}
+	.layui-form-item{
+		border-bottom: 1px solid #eee;
+		padding:15px 0;
+	}
+	.watermarkText{
+		display: none;
+	}
+
+	.tip {
+	    padding: 8px 16px;
+	    background-color: #ecf8ff;
+	    border-radius: 4px;
+	    border-left: 5px solid #50bfff;
+	}
+	</style>
+</head>
+<body class="Watermark">
+
+	<!-- 导航 -->
+	<div class="nav">
+		<ul class="nav-ul">
+			<li class="nav-item"><a href="/" class="nav-link">首页</a><i class="layui-icon layui-icon-right"></i></li>
+			<li class="nav-item">编辑栏目</li>
+		</ul>
+	</div>
+
+	<div class="main">
+		
+		
+
+		<div class="layui-form" action="">
+
+			<div class="tip" style="margin-bottom:15px">基本信息</div>
+
+			<div class="layui-form-item">
+			    <label class="layui-form-label">栏目名称</label>
+			    <div class="layui-input-block">
+			      <input type="text" name="UploadImagesMax" autocomplete="off" placeholder="栏目名称" class="layui-input maxwidth" value="">
+			    </div>
+			</div>
+			
+			<div class="layui-form-item">
+			    <label class="layui-form-label">栏目排序</label>
+			    <div class="layui-input-block">
+			      <input type="text" name="UploadImageSuffix" autocomplete="off" placeholder="栏目排序" class="layui-input maxwidth" value="">
+			    </div>
+			</div>
+
+			<div class="layui-form-item">
+			    <label class="layui-form-label">栏目模块</label>
+			    <div class="layui-input-block maxwidth">
+			      <select name="interest" lay-filter="aihao">
+			        <option value="0">写作</option>
+			        <option value="1">阅读</option>
+			      </select>
+			    </div>
+			</div>
+			
+			
+			<div class="layui-form-item">
+			    <label class="layui-form-label">导航显示位置</label>
+			    <div class="layui-input-block">
+			      <input type="radio" name="ArticleState" value="男" title="头部导航"></br>
+			      <input type="radio" name="ArticleState" value="男" title="底部导航"></br>
+			      <input type="radio" name="ArticleState" value="男" title="全部显示">
+			    </div>
+			</div>
+
+			<div class="layui-form-item">
+			    <label class="layui-form-label">前台显示</label>
+			    <div class="layui-input-block">
+			      <input type="radio" name="ArticleState" value="男" title="是">
+			      <input type="radio" name="ArticleState" value="男" title="否">
+			    </div>
+			</div>
+			
+			<div class="layui-form-item">
+			    <label class="layui-form-label">是否新窗口打开</label>
+			    <div class="layui-input-block">
+			      <input type="radio" name="ArticleState" value="男" title="是">
+			      <input type="radio" name="ArticleState" value="男" title="否">
+			    </div>
+			</div>
+			
+			<div class="tip" style="margin-top:-15px;margin-bottom: 15px;">SEO设置</div>
+
+			<div class="layui-form-item">
+			    <label class="layui-form-label">标题</label>
+			    <div class="layui-input-block">
+			      <input type="text" name="UploadAudioMax" autocomplete="off" placeholder="标题" class="layui-input maxwidth" value="">
+			    </div>
+			</div>
+			
+			<div class="layui-form-item">
+			    <label class="layui-form-label">关键词</label>
+			    <div class="layui-input-block">
+			      <input type="text" name="UploadAudioSuffix" autocomplete="off" placeholder="关键词" class="layui-input maxwidth" value="">
+			    </div>
+			</div>
+
+			<div class="layui-form-item">
+			    <label class="layui-form-label">描述</label>
+			    <div class="layui-input-block">
+			      <textarea placeholder="描述" class="layui-textarea maxwidth"></textarea>
+			    </div>
+			</div>
+			
+			
+			<div class="layui-form-item">
+			    <div class="layui-input-block">
+			      <button type="submit" class="layui-btn layui-btn-normal" lay-submit="" lay-filter="UploadSubmit">立即提交</button>
+			      <button type="reset" class="layui-btn layui-btn-primary" onclick="javascript:history.go(-1);">返回</button>
+			    </div>
+			</div>
+
+		</div>
+		  
+	</div>
+
+	<script src="/static/js/jquery.min.js"></script>
+	<script src="/static/lib/layui/layui.js"></script>
+  	<script>
+  		layui.use(['form','jquery'], function(){
+		  var form = layui.form
+		  ,layer = layui.layer
+		  ,$=layui.jquery;
+
+
+		  form.on('submit(UploadSubmit)',function(data){
+		  	console.log(data)
+
+		  	return false;
+		  })
+		  
+		});
+  	</script>
+</body>
+</html>

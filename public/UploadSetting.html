@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>网站信息</title>
+	<link rel="stylesheet" href="/static/lib/layui/css/layui.css">
+	<style>
+	body{
+		display: none;
+	}
+	/*reset*/
+	body,li,ul,h1,h2,h3,h4,h5,h6,p{
+		padding:0;
+		margin:0;
+		font-size:14px;
+	}
+	ul,li{
+		list-style:none;
+	}
+	a{
+		text-decoration: none;
+		color:#000;
+	}
+
+	/*导航*/
+	.nav{
+		padding: 15px 20px;
+	    box-shadow: 0 2px 4px rgba(0,0,0,.08);
+	    margin-bottom: 20px;
+	    position: fixed;
+	    z-index: 100;
+	    width: 100%;
+	    background: #fff;
+	}
+	.nav-ul{
+		overflow: hidden;
+	}
+	.nav-item{
+		float: left;
+		color:#606266;
+		font-size:15px;
+	}
+	.nav-link{
+		color:#303133;
+		font-weight: bold;
+	}
+
+
+	.main{
+		padding:60px 8px 0 8px;
+	}
+
+	.maxwidth{
+		max-width:300px;
+	}
+	.layui-form{
+		border:1px solid #eee;
+		border-bottom: none;
+	}
+	#UploadWatermark{
+		vertical-align: top;
+		border-radius:3px;
+	}
+	.watermarkImg{
+		height:38px;
+	}
+
+
+	.layui-nav{
+		padding:0 2px;
+		background: #fff;
+	}
+	.layui-nav .layui-nav-item a:hover, .layui-nav .layui-this a{
+		color:#333;
+	}
+	.layui-nav .layui-nav-item a{
+		color:#000;
+	}
+	.layui-nav .layui-nav-item{
+		line-height: 45px;
+	}
+	.layui-form-label{
+		width:120px;
+	}
+	.layui-input-block{
+		margin-left:150px;
+	}
+	.layui-form-item{
+		border-bottom: 1px solid #eee;
+		padding:15px 0;
+	}
+	.watermarkText{
+		display: none;
+	}
+	</style>
+</head>
+<body class="Watermark">
+
+	<!-- 导航 -->
+	<div class="nav">
+		<ul class="nav-ul">
+			<li class="nav-item"><a href="/" class="nav-link">首页</a><i class="layui-icon layui-icon-right"></i></li>
+			<li class="nav-item">上传配置</li>
+		</ul>
+	</div>
+	
+	
+
+
+	<div class="main">
+		
+		<ul class="layui-nav">
+		  	<li class="layui-nav-item layui-this"><a href="###">上传配置</a></li>
+	  		<li class="layui-nav-item"><a href="Thumbnail.html">缩略图</a></li>
+	  		<li class="layui-nav-item"><a href="Watermark.html">图片水印</a></li>
+		</ul>
+
+		<!-- <form action="/index.php/api/admin/excel" method="post" enctype="multipart/form-data">
+			<input type="file" name="file" />
+			<input type="submit" value="submit">
+		</form> -->
+
+
+		<div class="layui-form" action="" lay-filter="UploadSetting">
+			
+			<div class="layui-form-item">
+			    <label class="layui-form-label">图片上传大小限制</label>
+			    <div class="layui-input-block">
+			      <input type="text" name="UploadImagesMax" autocomplete="off" placeholder="图片上传大小限制" class="layui-input maxwidth" value="0">
+			    </div>
+			</div>
+			
+			<div class="layui-form-item">
+			    <label class="layui-form-label">图片后缀</label>
+			    <div class="layui-input-block">
+			      <input type="text" name="UploadImageSuffix" autocomplete="off" placeholder="图片后缀" class="layui-input maxwidth" value="">
+			    </div>
+			</div>
+			
+			<div class="layui-form-item">
+			    <label class="layui-form-label">视频文件大小限制</label>
+			    <div class="layui-input-block">
+			      <input type="text" name="UploadVideoMax" autocomplete="off" placeholder="视频文件大小限制" class="layui-input maxwidth" value="0">
+			    </div>
+			</div>
+			
+			<div class="layui-form-item">
+			    <label class="layui-form-label">视频后缀</label>
+			    <div class="layui-input-block">
+			      <input type="text" name="UploadVideoSuffix" autocomplete="off" placeholder="视频后缀" class="layui-input maxwidth" value="">
+			    </div>
+			</div>
+
+			<div class="layui-form-item">
+			    <label class="layui-form-label">音频文件大小限制</label>
+			    <div class="layui-input-block">
+			      <input type="text" name="UploadAudioMax" autocomplete="off" placeholder="音频文件大小限制" class="layui-input maxwidth" value="0">
+			    </div>
+			</div>
+			
+			<div class="layui-form-item">
+			    <label class="layui-form-label">音频后缀</label>
+			    <div class="layui-input-block">
+			      <input type="text" name="UploadAudioSuffix" autocomplete="off" placeholder="音频后缀" class="layui-input maxwidth" value="">
+			    </div>
+			</div>
+
+			<div class="layui-form-item">
+			    <label class="layui-form-label">其他文件大小限制</label>
+			    <div class="layui-input-block">
+			      <input type="text" name="UploadOtherMax" autocomplete="off" placeholder="其他文件大小限制" class="layui-input maxwidth" value="0">
+			    </div>
+			</div>
+			
+			<div class="layui-form-item">
+			    <label class="layui-form-label">文件后缀</label>
+			    <div class="layui-input-block">
+			      <input type="text" name="UploadOtherSuffix" autocomplete="off" placeholder="文件后缀" class="layui-input maxwidth" value="">
+			    </div>
+			</div>
+			
+			<div class="layui-form-item">
+			    <div class="layui-input-block">
+			      <button type="submit" class="layui-btn layui-btn-normal" lay-submit="" lay-filter="UploadSubmit">立即提交</button>
+			    </div>
+			</div>
+
+		</div>
+		  
+	</div>
+
+	<script src="/static/js/config.js"></script>
+	<script src="/static/lib/layui/layui.js"></script>
+  	<script>
+  		layui.use(['form','jquery'], function(){
+
+			var form = layui.form
+			,layer = layui.layer
+			,$=layui.jquery;
+
+
+		  	//请求初始数据
+			$.ajax({
+				url:config['GetConfig_API'],
+				data:{type:'upload'},
+				success:function(res){
+
+					if(res.errorcode!=0){
+						layer.msg(res.errormsg);
+						return false;
+					}
+
+					var FormData=JSON.parse(res.data);
+
+					form.val('UploadSetting',FormData);//初始表单
+				}
+			})
+
+			form.on('submit(UploadSubmit)',function(data){
+
+				data.field.type='upload';
+				$.ajax({
+				url:config['UpdateConfig_API'],
+				data:data.field,
+				type:'post',
+				dataType:'json',
+				success:function(res){
+					top.layer.msg(res.errormsg);
+					if(res.errorcode==0){
+						location.reload();
+					}
+				}
+			})
+				return false;
+
+			})
+		  
+		});
+  	</script>
+</body>
+<style>
+	/*这样做的目的是为了在初始化的时候不用看到渲染过程*/
+	body{
+		display: block;
+	}
+</style>
+</html>

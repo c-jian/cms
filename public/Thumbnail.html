@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>网站信息</title>
+	<link rel="stylesheet" href="/static/lib/layui/css/layui.css">
+	<style>
+	body{
+		display: none;
+	}
+	/*reset*/
+	body,li,ul,h1,h2,h3,h4,h5,h6,p{
+		padding:0;
+		margin:0;
+		font-size:14px;
+	}
+	ul,li{
+		list-style:none;
+	}
+	a{
+		text-decoration: none;
+		color:#000;
+	}
+
+	/*导航*/
+	.nav{
+		padding: 15px 20px;
+	    box-shadow: 0 2px 4px rgba(0,0,0,.08);
+	    margin-bottom: 20px;
+	    position: fixed;
+	    z-index: 100;
+	    width: 100%;
+	    background: #fff;
+	}
+	.nav-ul{
+		overflow: hidden;
+	}
+	.nav-item{
+		float: left;
+		color:#606266;
+		font-size:15px;
+	}
+	.nav-link{
+		color:#303133;
+		font-weight: bold;
+	}
+
+
+	.main{
+		padding:60px 8px 0 8px;
+	}
+
+	.maxwidth{
+		max-width:60px;
+	}
+	.layui-form{
+		border:1px solid #eee;
+		border-bottom: none;
+	}
+	.layui-nav{
+		padding:0 2px;
+		background: #fff;
+	}
+	.layui-nav .layui-nav-item a:hover, .layui-nav .layui-this a{
+		color:#333;
+	}
+	.layui-nav .layui-nav-item a{
+		color:#000;
+	}
+	.layui-nav .layui-nav-item{
+		line-height: 45px;
+	}
+
+	.layui-form-label{
+		width:90px;
+	}
+	.layui-input-block{
+		margin-left:120px;
+	}
+	.layui-form-item{
+		border-bottom: 1px solid #eee;
+		padding:15px 0;
+	}
+
+	.sign{
+		float: left;
+		width:30px;
+		height:38px;
+		line-height: 38px;
+		text-align: center;
+		margin-left: -10px;
+		color:#ccc;
+		font-size:16px;
+	}
+	</style>
+</head>
+<body class="Watermark">
+
+	<!-- 导航 -->
+	<div class="nav">
+		<ul class="nav-ul">
+			<li class="nav-item"><a href="/" class="nav-link">首页</a><i class="layui-icon layui-icon-right"></i></li>
+			<li class="nav-item">缩略图</li>
+		</ul>
+	</div>
+
+	<div class="main">
+		
+		<ul class="layui-nav">
+			<li class="layui-nav-item"><a href="UploadSetting.html">上传配置</a></li>
+		  	<li class="layui-nav-item layui-this"><a href="###">缩略图</a></li>
+		  	<li class="layui-nav-item"><a href="Watermark.html">图片水印</a></li>
+		</ul>
+
+		<div class="layui-form" action="" lay-filter="Thumbnail">
+
+			<div class="layui-form-item">
+			    <label class="layui-form-label">生成方式</label>
+			    <div class="layui-input-block">
+			    	<input type="radio" name="ThumbnailType" value="0" title="拉伸"></br>
+	     			<input type="radio" name="ThumbnailType" value="1" title="留白"></br>
+	     			<input type="radio" name="ThumbnailType" value="2" title="裁剪">
+			    </div>
+			</div>
+		  
+			<div class="layui-form-item">
+			    <label class="layui-form-label">产品图片</label>
+			    <div class="layui-input-inline maxwidth">
+			      <input type="text" name="ThumbnailProductWidth" autocomplete="off" placeholder="宽" class="layui-input" value="">
+			    </div>
+			    <div class="sign">
+			    	X
+			    </div>
+			    <div class="layui-input-inline maxwidth">
+			      <input type="text" name="ThumbnailProductHeight" autocomplete="off" placeholder="高" class="layui-input" value="">
+			    </div>
+			</div>
+			
+			<div class="layui-form-item">
+			    <label class="layui-form-label">文章图片</label>
+			    <div class="layui-input-inline maxwidth">
+			      <input type="text" name="ThumbnailArticleWidth" autocomplete="off" placeholder="宽" class="layui-input" value="">
+			    </div>
+			    <div class="sign">
+			    	X
+			    </div>
+			    <div class="layui-input-inline maxwidth">
+			      <input type="text" name="ThumbnailArticleHeight" autocomplete="off" placeholder="高" class="layui-input" value="">
+			    </div>
+			</div>
+			
+			<div class="layui-form-item">
+			    <label class="layui-form-label">图片模块</label>
+			    <div class="layui-input-inline maxwidth">
+			      <input type="text" name="ThumbnailImagesWidth" autocomplete="off" placeholder="宽" class="layui-input" value="">
+			    </div>
+			    <div class="sign">
+			    	X
+			    </div>
+			    <div class="layui-input-inline maxwidth">
+			      <input type="text" name="ThumbnailImagesHeight" autocomplete="off" placeholder="高" class="layui-input" value="">
+			    </div>
+			</div>
+
+			
+			<div class="layui-form-item">
+			    <div class="layui-input-block">
+			      <button type="submit" class="layui-btn layui-btn-normal" lay-submit="" lay-filter="ThumbnailSubmit">立即提交</button>
+			    </div>
+			</div>
+
+		</div>
+		  
+	</div>
+
+	<!-- <script src="/static/js/jquery.min.js"></script> -->
+	<script src="/static/js/config.js"></script>
+	<script src="/static/lib/layui/layui.js"></script>
+  	<script>
+  		layui.use(['form','jquery'], function(){
+		  var form = layui.form
+		  ,layer = layui.layer
+		  ,$=layui.jquery;
+
+
+		  //请求初始数据
+			$.ajax({
+				url:config['GetConfig_API'],
+				data:{type:'thumbnail'},
+				success:function(res){
+
+					if(res.errorcode!=0){
+						layer.msg(res.errormsg);
+						return false;
+					}
+
+					var FormData=JSON.parse(res.data);
+
+
+					form.val('Thumbnail',FormData);//初始表单
+				}
+			})
+
+		  form.on('submit(ThumbnailSubmit)',function(data){
+
+		  		data.field.type='thumbnail';
+				$.ajax({
+					url:config['UpdateConfig_API'],
+					data:data.field,
+					type:'post',
+					dataType:'json',
+					success:function(res){
+						top.layer.msg(res.errormsg);
+						if(res.errorcode==0){
+							location.reload();
+						}
+					}
+				})
+				return false;
+		  })
+		  
+		});
+  	</script>
+</body>
+<style>
+	body{
+		display: block;
+	}
+</style>
+</html>

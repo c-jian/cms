@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>网站信息</title>
+	<link rel="stylesheet" href="/static/lib/layui/css/layui.css">
+	<style>
+	/*reset*/
+	body,li,ul,h1,h2,h3,h4,h5,h6,p{
+		padding:0;
+		margin:0;
+		font-size:14px;
+	}
+	ul,li{
+		list-style:none;
+	}
+	a{
+		text-decoration: none;
+		color:#000;
+	}
+
+	/*导航*/
+	.nav{
+		padding: 15px 20px;
+	    box-shadow: 0 2px 4px rgba(0,0,0,.08);
+	    margin-bottom: 20px;
+	    position: fixed;
+	    z-index: 100;
+	    width: 100%;
+	    background: #fff;
+	}
+	.nav-ul{
+		overflow: hidden;
+	}
+	.nav-item{
+		float: left;
+		color:#606266;
+		font-size:15px;
+	}
+	.nav-link{
+		color:#303133;
+		font-weight: bold;
+	}
+
+
+	.main{
+		padding:80px 8px 0 8px;
+	}
+
+	.maxwidth{
+		max-width:600px;
+	}
+
+	
+	.layui-form-label{
+		width:120px;
+	}
+	.layui-input-block{
+		margin-left:150px;
+	}
+	
+	</style>
+</head>
+<body class="SystemInfo">
+
+	<!-- 导航 -->
+	<div class="nav">
+		<ul class="nav-ul">
+			<li class="nav-item"><a href="/" class="nav-link">首页</a><i class="layui-icon layui-icon-right"></i></li>
+			<li class="nav-item">系统配置</li>
+		</ul>
+	</div>
+
+	<div class="main">
+		 
+		<div class="layui-form " action="" lay-filter="SystemInfoTable">
+
+			<div class="maxwidth">
+				<div class="layui-form-item">
+				    <label class="layui-form-label">富文本编辑器</label>
+				    <div class="layui-input-block">
+				      <select name="Editor" lay-filter="editor">
+				        <option value="UEditor">UEditor</option>
+				        <option value="UMEditor">UMEditor</option>
+				        <option value="KindEditor">KindEditor</option>
+				        <option value="CKEditor">CKEditor</option>
+				        <option value="simditor">simditor</option>
+				      </select>
+				    </div>
+				</div>
+
+				<div class="layui-form-item">
+				    <label class="layui-form-label">版权信息</label>
+				    <div class="layui-input-block">
+				      <input type="text" name="WebsiteCopy" autocomplete="off" placeholder="版权信息" class="layui-input">
+				    </div>
+				</div>
+
+
+				  <div class="layui-form-item">
+				    <div class="layui-input-block">
+				      <button type="submit" class="layui-btn layui-btn-normal" lay-submit="" lay-filter="SystemInfoSubmit">立即提交</button>
+				      <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+				    </div>
+				  </div>
+			</div>
+
+		</div>
+		  
+	</div>
+	
+	<script src="/static/js/config.js"></script>
+	<script src="/static/lib/layui/layui.js"></script>
+  	<script>
+		layui.use(['form', 'layer','jquery'], function(){
+
+			var form = layui.form
+			,layer = layui.layer
+			,$=layui.jquery;
+
+			$.ajax({
+				url:config['GetConfig_API'],
+				data:{type:'system'},
+				dataType:'json',
+				success:function(data){
+					form.val('SystemInfoTable',JSON.parse(data.data));
+				}
+			})
+
+			//监听提交
+			form.on('submit(SystemInfoSubmit)', function(data){
+
+				data.field.type='system';
+				$.ajax({
+					url:config['UpdateConfig_API'],
+					data:data.field,
+					type:'post',
+					dataType:'json',
+					success:function(res){
+						top.layer.msg(res.errormsg);
+						if(res.errorcode==0){
+							location.reload();
+						}
+					}
+				})
+
+				return false;
+			});
+
+		});
+  	</script>
+</body>
+</html>

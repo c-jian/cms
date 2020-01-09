@@ -1,0 +1,472 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>栏目类型</title>
+	<link rel="stylesheet" href="/static/lib/layui/css/layui.css">
+	<style>
+	/*reset*/
+	body,li,ul,h1,h2,h3,h4,h5,h6,p{
+		padding:0;
+		margin:0;
+		font-size:14px;
+	}
+	ul,li{
+		list-style:none;
+	}
+	a{
+		text-decoration: none;
+		color:#000;
+	}
+
+	/*导航*/
+	.nav{
+		padding: 15px 20px;
+	    box-shadow: 0 2px 4px rgba(0,0,0,.08);
+	    margin-bottom: 20px;
+	    position: fixed;
+	    z-index: 100;
+	    width: 100%;
+	    background: #fff;
+	}
+	.nav-ul{
+		overflow: hidden;
+	}
+	.nav-item{
+		float: left;
+		color:#606266;
+		font-size:15px;
+	}
+	.nav-link{
+		color:#303133;
+		font-weight: bold;
+	}
+
+
+	.main{
+		padding:50px 8px 0 8px;
+	}
+	.header{
+		padding:20px 0 0 0;
+	}
+	
+	
+	#ColumnTypePanel{
+		display: none;
+		padding:15px 15px 0 15px;
+	}
+	body .ShowColumnTypePanel #ColumnTypePanel{
+		display: block;
+	}
+	#ParamPanel{
+		display: none;
+		padding:15px 15px 10px 0px;
+		position: relative;
+	}
+	#ParamPanel .layui-form-item .layui-input-inline{
+		width:120px;
+	}
+	#ParamPanel .layui-input-block{
+		width:310px;
+		margin-left: 100px;
+	}
+	#ParamPanel .layui-form-label{
+		padding:8px 10px;
+	}
+	#ParamPanel .param-item .defaultValue{
+		width:50px;
+	}
+	#ParamPanel .param-item-box{
+		padding-bottom:30px;
+	}
+	#ParamPanel .layui-form-item{
+		margin-bottom: 10px;
+	}
+	#ParamPanel .layui-icon{
+		margin-top:9px;
+	}
+	#ParamPanel .btns{
+		position: absolute;
+		bottom:0;
+		left:0;
+		right:0;
+		background: #fff;
+		border-top:1px solid #eee;
+		margin-bottom: 0;
+		padding:10px 0;
+	}
+	body .ShowParamPanel #ParamPanel{
+		display: block;
+	}
+	body .ShowParamPanel .layui-layer-btn{
+		background: #eee;
+		border-top: 1px #ddd solid;
+		padding:5px 15px;
+	}
+	body .ShowParamPanel .layui-layer-btn a{
+		padding:5px 10px;
+	}
+
+	</style>
+</head>
+<body class="websiteInfo">
+
+	<!-- 导航 -->
+	<div class="nav">
+		<ul class="nav-ul">
+			<li class="nav-item"><a href="/" class="nav-link">首页</a><i class="layui-icon layui-icon-right"></i></li>
+			<li class="nav-item">系统栏目</li>
+		</ul>
+	</div>
+
+	<div class="main">
+
+		<div class="header">
+			<button type="button" class="layui-btn layui-btn-normal layui-btn-sm AddColumnType">添加类型</button>
+			<button type="button" class="layui-btn layui-btn-danger layui-btn-sm DeleteColumnType">删除类型</button>
+		</div>
+		<table class="layui-hide" id="ColumnTypeTable" lay-filter="ColumnTypeTable"></table>
+
+	</div>
+	
+
+	<!-- 添加、编辑类型面板 -->
+	<div id="ColumnTypePanel">
+		<div class="layui-form" action="" lay-filter="ColumnTypeForm">
+	        <div class="layui-form-item">
+	            <label class="layui-form-label">类型名称</label>
+	            <div class="layui-input-inline">
+	                <input type="text" name="name" required  lay-verify="required" placeholder="类型名称" autocomplete="off" class="layui-input">
+	            </div>
+	        </div>
+	        <div class="layui-form-item">
+	            <label class="layui-form-label">状态</label>
+	            <div class="layui-input-block">
+	            	<input type="radio" name="availability" value="1" title="启用" checked>
+	            	<input type="radio" name="availability" value="0" title="禁用">
+	            </div>
+	        </div>
+	        <div class="layui-form-item layui-form-text">
+	            <label class="layui-form-label">排序</label>
+	            <div class="layui-input-block">
+	            <input type="text" name="sort" placeholder="排序" autocomplete="off" class="layui-input" style="width:150px;" value="0">
+	            </div>
+	        </div>
+	        <div class="layui-form-item">
+	            <div class="layui-input-block">
+	            <button class="layui-btn layui-btn-normal" lay-submit lay-filter="ColumnTypeSubmit">立即提交</button>
+	            <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+	            </div>
+	        </div>
+	        <input type="hidden" name="id" value="">
+	    </div>
+	</div>
+	
+	<!-- 添加参数面板 -->
+	<div id="ParamPanel">
+		<div class="layui-form" action="" lay-filter="ParamForm">
+
+	        <div class="layui-form-item param-group">
+	            <label class="layui-form-label">参数组名称</label>
+	            <div class="layui-input-inline">
+	                <input type="text" name="name" required  lay-verify="required" placeholder="参数组名称" autocomplete="off" class="layui-input">
+	            </div>
+	            <a class="layui-btn layui-btn-xs layui-btn-danger layui-icon layui-icon-delete"></a>
+	  			<a class="layui-btn layui-btn-xs layui-icon layui-icon-add-1"></a>
+	        </div>
+	        <div class="param-item-box">
+		        <div class="layui-form-item param-item">
+		            <label class="layui-form-label">参数名称</label>
+		            <div class="layui-input-inline">
+		                <input type="text" name="name" required  lay-verify="required" placeholder="参数名称" autocomplete="off" class="layui-input">
+		            </div>
+		            <label class="layui-form-label defaultValue">默认值</label>
+		            <div class="layui-input-inline">
+		                <input type="text" name="name" required  lay-verify="required" placeholder="选填" autocomplete="off" class="layui-input">
+		            </div>
+		            <a class="layui-btn layui-btn-xs layui-btn-danger layui-icon layui-icon-delete"></a>
+		  			<a class="layui-btn layui-btn-xs layui-icon layui-icon-add-1"></a>
+		        </div>
+		        <div class="layui-form-item param-item">
+		            <label class="layui-form-label">参数名称</label>
+		            <div class="layui-input-inline">
+		                <input type="text" name="name" required  lay-verify="required" placeholder="参数名称" autocomplete="off" class="layui-input">
+		            </div>
+		            <label class="layui-form-label defaultValue">默认值</label>
+		            <div class="layui-input-inline">
+		                <input type="text" name="name" required  lay-verify="required" placeholder="选填" autocomplete="off" class="layui-input">
+		            </div>
+		            <a class="layui-btn layui-btn-xs layui-btn-danger layui-icon layui-icon-delete"></a>
+		  			<a class="layui-btn layui-btn-xs layui-icon layui-icon-add-1"></a>
+		        </div>
+		    </div>
+
+		    <div class="layui-form-item param-group">
+	            <label class="layui-form-label">参数组名称</label>
+	            <div class="layui-input-inline">
+	                <input type="text" name="name" required  lay-verify="required" placeholder="参数组名称" autocomplete="off" class="layui-input">
+	            </div>
+	            <a class="layui-btn layui-btn-xs layui-btn-danger layui-icon layui-icon-delete"></a>
+	  			<a class="layui-btn layui-btn-xs layui-icon layui-icon-add-1"></a>
+	        </div>
+	        <div class="param-item-box">
+		        <div class="layui-form-item param-item">
+		            <label class="layui-form-label">参数名称</label>
+		            <div class="layui-input-inline">
+		                <input type="text" name="name" required  lay-verify="required" placeholder="参数名称" autocomplete="off" class="layui-input">
+		            </div>
+		            <label class="layui-form-label defaultValue">默认值</label>
+		            <div class="layui-input-inline">
+		                <input type="text" name="name" required  lay-verify="required" placeholder="选填" autocomplete="off" class="layui-input">
+		            </div>
+		            <a class="layui-btn layui-btn-xs layui-btn-danger layui-icon layui-icon-delete"></a>
+		  			<a class="layui-btn layui-btn-xs layui-icon layui-icon-add-1"></a>
+		        </div>
+		        <div class="layui-form-item param-item">
+		            <label class="layui-form-label">参数名称</label>
+		            <div class="layui-input-inline">
+		                <input type="text" name="name" required  lay-verify="required" placeholder="参数名称" autocomplete="off" class="layui-input">
+		            </div>
+		            <label class="layui-form-label defaultValue">默认值</label>
+		            <div class="layui-input-inline">
+		                <input type="text" name="name" required  lay-verify="required" placeholder="选填" autocomplete="off" class="layui-input">
+		            </div>
+		            <a class="layui-btn layui-btn-xs layui-btn-danger layui-icon layui-icon-delete"></a>
+		  			<a class="layui-btn layui-btn-xs layui-icon layui-icon-add-1"></a>
+		        </div>
+		    </div>
+	        <input type="hidden" name="id" value="">
+	    </div>
+	</div>
+
+	<script type="text/html" id="barDemo">
+	  <a class="layui-btn layui-btn-xs" lay-event="edit">编辑</a>
+	  <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a>
+	</script>
+
+	<script type="text/html" id="MoreSetting">
+	  <a class="layui-btn layui-btn-xs" lay-event="MoreParam">补充参数</a>
+	  <a class="layui-btn layui-btn-normal layui-btn-xs" lay-event="SearchCondition">搜索条件</a>
+	</script>
+	
+	<script src="/static/js/config.js"></script>
+	<script src="/static/lib/layui/layui.js"></script>
+	<script>
+  	layui.use(['table','form','jquery'], function(){
+
+	  var table = layui.table,
+	  		form=layui.form,
+	  		$=layui.jquery;
+	  
+	  table.render({
+	    elem: '#ColumnTypeTable'
+	    ,id:'ColumnTypeTable'
+	    ,url:config['GetType_API']
+	    ,title: '系统栏目'
+	    ,parseData:function(res){
+	    	return {
+		      "code": res.errorcode, //解析接口状态
+		      "msg": res.errormsg, //解析提示文本
+		      "data": res.data //解析数据列表
+		    };
+	    }
+	    ,cols: [[
+	      {type: 'checkbox', fixed: 'left'}
+	      ,{field:'name', title:'类型名称'}
+	      ,{field:'', title:'搜索条件'}
+	      ,{field:'availability', title:'状态',templet:function(d){
+	      	if(d.availability ==1){//隐藏
+	      		return '<input type="checkbox" name="availability" value="'+d.id+'" lay-skin="switch" lay-text="启用|禁用" lay-filter="availability" checked="checked">';
+	      	}else{//显示
+	      		return '<input type="checkbox" name="availability" value="'+d.id+'" lay-skin="switch" lay-text="启用|禁用" lay-filter="availability">';
+	      	}
+	      },width:150}
+	      ,{field:'sort', title:'排序',edit:'text',width:80}
+	      ,{title:'更多设置',toolbar: '#MoreSetting',width:160}
+	      ,{fixed: 'right', title:'操作', toolbar: '#barDemo', width:150}
+	    ]]
+	    ,page: false
+	  });
+
+	  //提交表单数据
+	  form.on('submit(ColumnTypeSubmit)',function(data){
+
+	  	$.ajax({
+			url:config['Type_API'],
+			data:data.field,
+			type:'post',
+			dataType:'json',
+			success:function(res){
+				top.layer.msg(res.errormsg);
+				if(res.errorcode==0){
+					location.reload();
+				}
+			}
+		})
+	  	return false;
+	  })
+
+
+	  //添加类型点击事件
+	  $('.AddColumnType').click(function(){
+
+	  		layer.open({
+		  		title:'添加类型',
+				type: 1,
+				area:['500px'],
+				skin:'ShowColumnTypePanel',
+				content: $('#ColumnTypePanel')
+			});
+
+	  })
+	  
+
+	  	//类型状态编辑事件
+	  	form.on('switch(availability)',function(data){
+
+	  		var value=data.elem.checked?1:0;
+	  		$.ajax({
+				url:config['Type_API'],
+				data:{id:data.value,availability:value},
+				type:'post',
+				dataType:'json',
+				success:function(res){
+					if(res.errorcode!=0){
+						layer.msg(res.errormsg);
+					}
+				}
+			})
+
+	  	})
+
+
+	  	//表格排序编辑事件
+	  	table.on('edit(ColumnTypeTable)', function(obj){
+
+	  		$.ajax({
+				url:config['Type_API'],
+				data:{id:obj.data.id,sort:obj.value},
+				type:'post',
+				dataType:'json',
+				success:function(res){
+					if(res.errorcode!=0){
+						layer.msg(res.errormsg);
+					}
+				}
+			})
+
+		});
+
+	  //点击删除多个类型
+	  $('.DeleteColumnType').click(function(){
+
+	  		layer.confirm('确定批量删除吗？', function(index){
+
+	  			//获取选中的数据
+			  	var checkStatus = table.checkStatus('ColumnTypeTable');
+			  	var CheckedData=checkStatus.data;
+			  	var idstr='';
+
+			  	//拼接删除的id字符串
+			  	for(var i=0,len=CheckedData.length;i<len;i++){
+			  		idstr+=','+CheckedData[i].id;
+			  	}
+			  	idstr=idstr.substring(1);
+
+			  	//发起删除请求
+		  		$.ajax({
+					url:config['DeleteType_API'],
+					data:{id:idstr},
+					type:'post',
+					dataType:'json',
+					success:function(res){
+						layer.msg(res.errormsg);
+						if(res.errorcode==0){
+							table.reload('ColumnTypeTable',{
+								url:config['GetType_API']
+							})
+						}
+					}
+				})
+
+
+			});
+
+
+	  })
+
+	  //监听行工具事件
+	  table.on('tool(ColumnTypeTable)', function(obj){
+
+	    var data = obj.data;
+
+	    if(obj.event === 'del'){ //删除
+
+	      layer.confirm('确定删除吗？', function(index){
+	      	$.ajax({
+				url:config['DeleteType_API'],
+				data:{id:data.id},
+				dataType:'json',
+				success:function(res){
+					var res=res.data;
+					obj.del();
+	        		layer.close(index);
+				}
+			})
+	      });
+
+	    } else if(obj.event === 'edit'){ //编辑
+
+	    	init();
+	    	$.ajax({
+				url:config['GetType_API'],
+				data:{id:data.id},
+				dataType:'json',
+				success:function(res){
+					var res=res.data;
+					form.val('ColumnTypeForm',res);
+				}
+			})
+	     	layer.open({
+		  		title:'编辑栏目',
+				type: 1,
+				area:['500px'],
+				skin:'ShowColumnTypePanel',
+				content: $('#ColumnTypePanel')
+			});
+
+	    }else if(obj.event==='MoreParam'){
+
+	    	layer.open({
+		  		title:'添加参数',
+				type: 1,
+				area:['550px','400px'],
+				btn:['立即提交','添加参数组'],
+				skin:'ShowParamPanel',
+				content: $('#ParamPanel')
+			});
+
+	    }
+
+	  });
+
+
+
+	  function init(){
+
+	  	form.val('ColumnTypeForm',{
+	  		name:'',
+	  		availability:'1',
+	  		sort:0,
+	  		id:''
+	  	})
+
+	  }
+
+
+
+
+	});
+	</script>
+</body>
+</html>

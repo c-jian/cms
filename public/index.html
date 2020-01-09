@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title></title>
+	<style>
+	/*reset*/
+	body,li,ul,h1,h2,h3,h4,h5,h6,p{
+		padding:0;
+		margin:0;
+		font-size:14px;
+	}
+	ul,li{
+		list-style:none;
+	}
+	a{
+		text-decoration: none;
+		color:#000;
+	}
+	/*左侧导航*/
+	.mainleft{
+		width:200px;
+		background: #545c64;
+		position: absolute;
+		left:0;
+		top:0;
+		bottom:0;
+	}
+	.nav{
+		width:100%;
+		color:#fff;
+	}
+	.nav a{
+		color:#fff;
+	}
+	.nav-block{
+		width:100%;
+		padding:15px 0;
+		text-indent:15px;
+	}
+	.nav-block a{
+		display: block;
+	}
+
+	.second-nav{
+		width:100%;
+		text-indent:30px;
+	}
+	.second-nav-item{
+		
+	}
+	.nav-block:hover,.second-nav-item:hover{
+		background:#434a50;
+		cursor: pointer;
+	}
+	.second-link{
+		display: block;
+		padding:15px 0;
+	}
+	/*右侧内容*/
+	.mainright{
+		position: absolute;
+		left:200px;
+		top:0;
+		right:0;
+		bottom:0;
+		overflow:hidden;
+	}
+	#iframe{
+		width:100%;
+		height:100%;
+		overflow:hidden;
+	}
+	</style>
+</head>
+<body>
+
+	<!-- 左侧导航 -->
+	<div class="mainleft">
+		<ul class="nav">
+			<!-- <li class="nav-item">
+				<div class="nav-block">网站配置</div>
+				<ul class="second-nav">
+					<li class="second-nav-item"><a href="WebsiteInfo.html" class="second-link" target="iframe">基本配置</a></li>
+					<li class="second-nav-item"><a href="UploadSetting.html" class="second-link" target="iframe">上传设置</a></li>
+					<li class="second-nav-item"><a href="FriendLink.html" class="second-link" target="iframe">友情链接</a></li>
+				</ul>
+			</li>
+			<li class="nav-item">
+				<div class="nav-block">内容管理</div>
+				<ul class="second-nav">
+					<li class="second-nav-item"><a href="ContentManagement.html" class="second-link" target="iframe">内容管理</a></li>
+					<li class="second-nav-item"><a href="Column.html" class="second-link" target="iframe">栏目管理</a></li>
+					<li class="second-nav-item"><a href="ColumnType.html" class="second-link" target="iframe">栏目类型</a></li>
+					<li class="second-nav-item"><a href="ColumnModule.html" class="second-link" target="iframe">栏目模块</a></li>
+				</ul>
+			</li>
+			<li class="nav-item">
+				<div class="nav-block">系统管理</div>
+				<ul class="second-nav">
+					<li class="second-nav-item"><a href="SystemInfo.html" class="second-link" target="iframe">系统配置</a></li>
+					<li class="second-nav-item"><a href="EmailSetting.html" class="second-link" target="iframe">邮箱配置</a></li>
+					<li class="second-nav-item"><a href="SystemColumn.html" class="second-link" target="iframe">系统栏目</a></li>
+					<li class="second-nav-item"><a href="DataBackup.html" class="second-link" target="iframe">数据备份</a></li>
+				</ul>
+			</li>
+			<li class="nav-item">
+				<div class="nav-block"><a href="" target="iframe">系统管理</a></div>
+			</li> -->
+		</ul>
+	</div>
+	
+	<!-- 右侧区域 -->
+	<div class="mainright">
+		<iframe src="ContentManagement.html" frameborder="0" id="iframe" name="iframe"></iframe>
+	</div>
+<script src="/static/js/config.js"></script>
+<script src="/static/lib/layui/layui.js"></script>
+<script>
+layui.use(['layer','jquery'],function(){
+	layer=layui.layer;
+	var $=layui.jquery;
+
+	$.ajax({
+		url:config['GetSystemColumn_API'],
+		dataType:'json',
+		success:function(data){
+			var tpl='';
+			if(!data){return false;}
+			for(var i=0,len=data.length;i<len;i++){
+				if(data[i].children && data[i].children.length>0){
+					tpl+='<li class="nav-item">'+
+							'<div class="nav-block">'+data[i].SystemColumnName+'</div>'+
+							'<ul class="second-nav">';
+								var children=data[i].children;
+								for(var j=0,jlen=children.length;j<jlen;j++){
+									tpl+='<li class="second-nav-item"><a href="'+children[j].SystemColumnURL+'" class="second-link" target="iframe">'+children[j].SystemColumnName+'</a></li>';
+								}
+							tpl+='</ul>'+
+							'</li>';
+				}else{
+					tpl+='<li class="nav-item">'+
+							'<div class="nav-block"><a href="'+data[i].SystemColumnURL+'" target="iframe">'+data[i].SystemColumnName+'</a></div>'+
+						'</li>';
+				}
+
+			}
+			$('.nav').html(tpl);
+		}
+	})
+
+})
+</script>
+</body>
+</html>

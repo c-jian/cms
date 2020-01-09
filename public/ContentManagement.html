@@ -1,0 +1,359 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>内容管理</title>
+	<link rel="stylesheet" href="/static/lib/layui/css/layui.css">
+	<style>
+	/*reset*/
+	body,li,ul,h1,h2,h3,h4,h5,h6,p{
+		padding:0;
+		margin:0;
+		font-size:14px;
+	}
+	ul,li{
+		list-style:none;
+	}
+	a{
+		text-decoration: none;
+		color:#000;
+	}
+
+	/*导航*/
+	.nav{
+		padding: 15px 20px;
+	    box-shadow: 0 2px 4px rgba(0,0,0,.08);
+	    margin-bottom: 20px;
+	    position: fixed;
+	    z-index: 100;
+	    width: 100%;
+	    background: #fff;
+	}
+	.nav-ul{
+		overflow: hidden;
+	}
+	.nav-item{
+		float: left;
+		color:#606266;
+		font-size:15px;
+	}
+	.nav-link{
+		color:#303133;
+		font-weight: bold;
+	}
+
+
+	.main{
+		padding:50px 8px 0 8px;
+	}
+	.header{
+		padding-top:20px;
+		border-bottom: 1px solid #eee;
+		overflow: hidden;
+	}
+
+	/**模型列表样式*/
+	.outerbox{
+		display: table;
+		width:100%;
+		margin-top:40px;
+	}
+	.tablerow{
+		display: table-row;
+	}
+	.model-item{
+		display:table-cell;
+		width:25%;
+		padding:20px;
+	}
+	.model-item .model-link{
+		display: block;
+		text-align: center;
+		width:100px;
+		margin:0 auto;
+		padding: 15px 0;
+	}
+	.model-item .model-link:hover{
+		background: #eee;
+	}
+	.model-item .model-img{
+		vertical-align: top;
+		max-width: 70px;
+	}
+	.model-item .model-text{
+		padding-top: 15px;
+		color:#08c;
+	}
+	.left-search{
+		float: left;
+		width:250px;
+	}
+	.cms-input{
+		position: relative;
+		padding:15px;
+	}
+	.cms-input_inner{
+		width:100%;
+		height: 32px;
+		line-height: 32px;
+		color:#606266;
+		border: 1px solid #dcdfe6;
+		background-color: #fff;
+		outline: none;
+		border-radius: 16px;
+		font-size:12px;
+		padding:0 10px 0 35px;
+		box-sizing: border-box;
+		transition: border-color .2s cubic-bezier(.645,.045,.355,1);
+	}
+	.cms-input_inner:focus{
+		border-color: #409eff;
+	}
+	.search-icon{
+		position: absolute;
+		left:25px;
+		top:50%;
+		margin-top:-8px;
+		cursor: pointer;
+	}
+
+	.right-choose{
+		float: right;
+		padding: 15px;
+	}
+	.way-item{
+		float: left;
+		height: 32px;
+		line-height: 32px;
+		margin-left:20px;
+		color:#555;
+		cursor: pointer;
+	}
+	.way-active{
+		color:#3a8ee6;
+	}
+	</style>
+</head>
+<body class="websiteInfo">
+
+	<!-- 导航 -->
+	<div class="nav">
+		<ul class="nav-ul">
+			<li class="nav-item"><a href="/" class="nav-link">首页</a><i class="layui-icon layui-icon-right"></i></li>
+			<li class="nav-item">文章列表</li>
+		</ul>
+	</div>
+
+	<div class="main">
+
+		<div class="header">
+			
+			<div class="left-search">
+				<!-- 搜索框 -->
+				<div class="cms-input">
+					<input type="text" autocomplete="off" placeholder="请输入栏目名称" class="cms-input_inner">
+					<span class="layui-icon layui-icon-search search-icon"></span>
+				</div>
+			</div>
+
+			<div class="right-choose">
+				<ul class="show-way">
+					<li class="way-item way-for-model" data-way="model"><i class="layui-icon layui-icon-component"></i>&nbsp;按模型分类</li>
+					<li class="way-item way-for-cate way-active" data-way="category"><i class="layui-icon layui-icon-app"></i>&nbsp;按栏目分类</li>
+				</ul>
+			</div>
+			
+		</div>
+		
+		<div class="outerbox">
+
+
+			<!-- <div class="tablerow">
+
+				<div class="model-item">
+					<div class="item-box">
+						<a href="ArticleList.html" class="model-link">
+							<img src="/static/img/ArticleModel.png" class="model-img">
+							<p class="model-text">文章模型</p>
+						</a>
+					</div>
+				</div>
+				<div class="model-item">
+					<div class="item-box">
+						<a href="ArticleList.html" class="model-link">
+							<img src="/static/img/PictureModel.png" class="model-img">
+							<p class="model-text">图片模型</p>
+						</a>
+					</div>
+				</div>
+				<div class="model-item">
+					<div class="item-box">
+						<a href="ArticleList.html" class="model-link">
+							<img src="/static/img/ProductModel.png" class="model-img">
+							<p class="model-text">产品模型</p>
+						</a>
+					</div>
+				</div>
+				<div class="model-item">
+					<div class="item-box">
+						<a href="ArticleList.html" class="model-link">
+							<img src="/static/img/ArticleModel.png" class="model-img">
+							<p class="model-text">文章模型</p>
+						</a>
+					</div>
+				</div>
+
+			</div>
+
+			<div class="tablerow">
+
+				<div class="model-item">
+					<div class="item-box">
+						<a href="ArticleList.html" class="model-link">
+							<img src="/static/img/ArticleModel.png" class="model-img">
+							<p class="model-text">文章模型</p>
+						</a>
+					</div>
+				</div>
+				<div class="model-item">
+					<div class="item-box">
+						<a href="ArticleList.html" class="model-link">
+							<img src="/static/img/PictureModel.png" class="model-img">
+							<p class="model-text">图片模型</p>
+						</a>
+					</div>
+				</div>
+				<div class="model-item">
+					<div class="item-box">
+						<a href="ArticleList.html" class="model-link">
+							<img src="/static/img/ProductModel.png" class="model-img">
+							<p class="model-text">产品模型</p>
+						</a>
+					</div>
+				</div>
+				<div class="model-item">
+					<div class="item-box">
+						<a href="ArticleList.html" class="model-link">
+							<img src="/static/img/ArticleModel.png" class="model-img">
+							<p class="model-text">文章模型</p>
+						</a>
+					</div>
+				</div>
+			</div> -->
+
+		</div>
+
+	</div>
+
+	<script src="/static/js/config.js"></script>
+	<script src="/static/js/jquery.min.js"></script>
+	<script src="/static/lib/layui/layui.js"></script>
+	<script>
+
+	
+
+  	layui.use(['table','jquery','layer'], function(){
+	  	var table = layui.table,
+	  	  	$=layui.jquery,
+	  	  	layer=layui.layer,
+	  	  	ShowWay='category';
+	  	
+	  	  	var CategoryData='';
+	  	  	//栏目列表
+		  	$.ajax({
+	      		url:config['GetParentColumn_API'],
+	      		data:{pid:0},
+	      		dataType:'json',
+	      		success:function(res){
+	      			renderCategoryList(res);
+	      		},
+	      		error:function(err){
+	      			layer.msg(err.message);
+	      		}
+	      	})
+	      	function renderCategoryList(data=[]){
+	      		var len=data.length;
+	      		if(len==0)return false;
+
+	      		var str='';
+	      		for(var i=0;i<len;i++){
+
+	      			if(i%4==0)str+='<div class="tablerow">';
+
+	      			str+='<div class="model-item">'+
+							'<div class="item-box">'+
+								'<a href="ArticleList.html?cid='+data[i].id+'&mid='+data[i].model_id+'" class="model-link">'+
+									'<img src="'+(data[i].icon || '/static/img/unknow.png')+'" height="70" class="model-img">'+
+									'<p class="model-text">'+data[i].cname+'</p>'+
+								'</a>'+
+							'</div>'+
+						'</div>';
+
+					if((i+1)%4==0)str+='</div>';
+
+	      		}
+	      		CategoryData=str;
+	      		$('.outerbox').html(str);
+	      		if(len<4){
+	      			$('.outerbox').css({width:(len/4*100)+'%'})
+	      		}
+	      	}
+
+	      	//切换视图
+	      	$('.way-item').click(function(){
+	      		var way=$(this).attr('data-way');
+	      		$('.way-item').removeClass('way-active');
+	      		$(this).addClass('way-active');
+	      		if(way=='category'){
+	      			$('.outerbox').html(CategoryData);
+	      		}else if(way=='model'){
+	      			$('.outerbox').html(ModelData);
+	      		}
+	      		var len=$('.item-box').length;
+	      		if(len<4){
+	      			$('.outerbox').css({width:(len/4*100)+'%'})
+	      		}
+	      	})
+
+
+	      	var ModelData='';
+		  	//模型列表
+		  	$.ajax({
+	      		url:config['GetColumnModuleList_API'],
+	      		dataType:'json',
+	      		success:function(res){
+	      			renderModelList(res.data)
+	      		},
+	      		error:function(err){
+	      			layer.msg(err.message);
+	      		}
+	      	})
+		  	function renderModelList(data=[]){
+	      		var len=data.length;
+	      		if(len==0)return false;
+
+	      		var str='';
+	      		for(var i=0;i<len;i++){
+
+	      			if(i%4==0)str+='<div class="tablerow">';
+
+	      			str+='<div class="model-item">'+
+							'<div class="item-box">'+
+								'<a href="ArticleList.html?mid='+data[i].id+'" class="model-link">'+
+									'<img src="'+(data[i].icon || '/static/img/unknow.png')+'" height="70" class="model-img">'+
+									'<p class="model-text">'+data[i].ModuleName+'</p>'+
+								'</a>'+
+							'</div>'+
+						'</div>';
+
+					if((i+1)%4==0)str+='</div>';
+
+	      		}
+	      		ModelData=str;
+	      		
+	      	}
+
+	  }) 
+	</script>
+</body>
+</html>

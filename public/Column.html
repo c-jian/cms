@@ -1,0 +1,435 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>添加栏目</title>
+	<link rel="stylesheet" href="/static/css/element.css">
+	<style>
+		/*reset*/
+		body,li,ul,h1,h2,h3,h4,h5,h6,p{
+			padding:0;
+			margin:0;
+			font-size:14px;
+		}
+		ul,li{
+			list-style:none;
+		}
+		a{
+			text-decoration: none;
+			color:#000;
+		}
+
+		/*文章内容区域*/
+		.content-area{
+			display: table;
+			width: 100%;
+		}
+		.content-left{
+			width:80px;
+			padding-right: 12px;
+			box-sizing: border-box;
+			text-align: right;
+		    font-size: 14px;
+		    color: #606266;
+		    line-height: 40px;
+		}
+		.content-right,.content-left{
+			display: table-cell;
+			vertical-align: top;
+		}
+		.editormd-toolbar{
+			position: absolute!important;
+		}
+		/*导航*/
+		.nav{
+			padding: 15px 20px;
+		    box-shadow: 0 2px 4px rgba(0,0,0,.08);
+		    margin-bottom: 20px;
+		    position: fixed;
+		    z-index: 100;
+		    width: 100%;
+		    background: #fff;
+		}
+		.nav-ul{
+			overflow: hidden;
+		}
+		.nav-item{
+			float: left;
+			color:#606266;
+			font-size:15px;
+		}
+		.nav-link{
+			color:#303133;
+			font-weight: bold;
+		}
+		
+		/*内容主体区域*/
+		.main{
+			padding:50px 8px 0 15px;
+			display: table;
+			width:100%;
+			box-sizing: border-box;
+		}
+		.addcolumn,.columnlist{
+			display: table-cell;
+		}
+		.addcolumn{
+			width:30%;
+			padding-right: 30px;
+		}
+		.columnlist{
+			width:60%;
+		}
+		.title{
+			font-size:20px;
+			font-weight: bold;
+			padding:30px 0;
+		}
+
+		.el-table--fit{
+			border-style: solid;
+			border-width: 1px 1px 0 1px;
+			border-color: #eee;
+		}
+
+
+		.operate{
+			padding:10px 0;
+		}
+		.input-with-select{
+			width:400px;
+		}
+
+		#select{
+			width:250px;
+			height:30px;
+			border:1px solid #ddd;
+		}
+		.delBtn{
+			margin-right: 10px;
+		}
+
+		.maxw{
+			width:100px;
+		}
+	</style>
+</head>
+<body>
+	
+	<div id="app">
+
+		<div class="nav">
+			<ul class="nav-ul">
+				<li class="nav-item"><a href="/" class="nav-link">首页</a><i class="el-icon-arrow-right"></i></li>
+				<li class="nav-item">添加分类</li>
+			</ul>
+		</div>
+
+
+		<div class="main">
+
+			<div class="addcolumn">
+				<h2 class="title">添加分类</h2>
+				<!-- 标题 -->
+				<el-form ref="form" :model="form" label-width="80px">
+					
+					<el-form-item label="所属分类">
+					    <!-- <el-select v-model="form.categoryId" placeholder="请选择栏目分类">
+					      <el-option label="顶级分类" value="0"></el-option>
+					      <el-option v-for="v in tableData" :label="v.cname" :value="v.cid"></el-option>
+					    </el-select> -->
+					    <select v-model="form.categoryId" id="select" ref="select"></select>
+					</el-form-item>
+					
+					<el-form-item label="分类名称">
+					    <el-input v-model="form.cname"></el-input>
+					</el-form-item>
+					
+					<el-form-item label="模型">
+					    <!-- <el-select v-model="form.categoryId" placeholder="请选择栏目分类">
+					      <el-option label="顶级分类" value="0"></el-option>
+					      <el-option v-for="v in tableData" :label="v.cname" :value="v.cid"></el-option>
+					    </el-select> -->
+					    <select v-model="form.model_id" id="selectModel" ref="selectModel"></select>
+					</el-form-item>
+						
+					<!-- <el-form-item label="排序">
+					    <el-input v-model="form.cname" class="maxw"></el-input>
+					</el-form-item> -->
+
+					<el-form-item>
+					    <el-button type="primary" @click="onSubmit">立即添加</el-button>
+					</el-form-item>
+				</el-form>
+			</div>
+
+			<div class="columnlist">
+				<h2 class="title">分类列表</h2>
+				<div class="operate">
+					<el-button type="danger" class="delBtn">删除</el-button>
+					<el-input placeholder="请输入内容" v-model="input" class="input-with-select">
+					    <el-button slot="append" icon="el-icon-search"></el-button>
+					</el-input>
+				</div>
+				<el-table
+				    ref="multipleTable"
+				    :data="tableData"
+				    tooltip-effect="dark"
+				    row-key="id"
+				    border
+				    style="width: 100%"
+				    :tree-props="{children: 'children', hasChildren: 'hasChildren'}"
+				    @selection-change="handleSelectionChange">
+				    <el-table-column
+				      type="selection"
+				      width="55">
+				    </el-table-column>
+				    <el-table-column
+				      label="序号"
+				      type="index"
+				      width="120">
+				    </el-table-column>
+				    <el-table-column
+				      prop="cname"
+				      label="栏目名称">
+				    </el-table-column>
+				    <el-table-column
+				      prop="cname"
+				      label="栏目模块">
+				    </el-table-column>
+				    <el-table-column
+				      label="排序"
+				      width="60">
+				    </el-table-column>
+				    <el-table-column
+				      fixed="right"
+				      label="操作"
+				      width="150">
+				      <template slot-scope="scope">
+				        <el-button
+				          size="mini"
+				          @click="handleEdit(scope.$index, scope.row)">编辑</el-button>
+				        <el-button
+				          size="mini"
+				          type="danger"
+				          @click="handleDelete(scope.$index, scope.row)">删除</el-button>
+				      </template>
+				    </el-table-column>
+				 </el-table>
+
+				<div class="operate">
+					
+				</div>
+			</div>
+
+		</div>
+
+	</div>
+
+	<!-- import Vue before Element -->
+  	<script src="/static/js/vue.min.js"></script>
+	  <!-- import JavaScript -->
+	  <script src="/static/js/element.js"></script>
+	  <script src="/static/js/axios.min.js"></script>
+	  <script>
+
+	    new Vue({
+	      el: '#app',
+	      data() {
+		      return {
+		        form: {
+		          cname: '',
+		          categoryId: '',
+		          model_id:''
+		      	},
+		      	tableData: [
+		      		/*{
+		      			cid:1,
+		      			cname:'前端',
+		      			pid:0,
+		      			children:[
+		      				{
+				      			cid:8,
+				      			cname:'Javascript',
+				      			pid:1
+				      		}
+		      			]
+		      		},
+		      		{
+		      			cid:2,
+		      			cname:'后端',
+		      			pid:2,
+		      			children:[
+		      				{
+				      			cid:3,
+				      			cname:'php',
+				      			pid:2,
+				      			children:[
+				      				{
+						      			cid:5,
+						      			cname:'fd',
+						      			pid:4
+						      		},
+						      		{
+						      			cid:6,
+						      			cname:'fd',
+						      			pid:4
+						      		}
+				      			]
+				      		},
+				      		{
+				      			cid:4,
+				      			cname:'Apache',
+				      			pid:2,
+				      			children:[
+				      				{
+						      			cid:5,
+						      			cname:'模块加载',
+						      			pid:4
+						      		},
+						      		{
+						      			cid:6,
+						      			cname:'配置文件',
+						      			pid:4
+						      		}
+				      			]
+				      		}
+		      			]
+		      		}
+		      	*/], //栏目表格数据
+		        multipleSelection: [],
+		        input:''
+		       }	
+		    },
+		    mounted(){
+		    	this.getColumn();
+		    	this.getModel();
+		    },
+		    methods: {
+		    	getColumn(){
+		    		var _this=this;
+
+		    		//获取栏目内容
+			      	axios.get('/index.php/api/admin/getColumn').then(function(res){
+				  		_this.tableData=res.data;
+				  		var str=createOption(_this.tableData);
+					  	var select=_this.$refs.select;
+					  	select.innerHTML=str;
+				  	}).catch(function(err){
+
+				  	})
+
+				  	var option='<option value="0">一级栏目</option>';
+				  	function createOption(arr,level=1){
+				  		for(var i=0,len=arr.length;i<len;i++){
+				  			var str=createStr(level);
+				  			option+='<option value='+arr[i].id+'>'+str+arr[i].cname+'</option>';
+				  			if(arr[i].children && arr[i].children.length>=1){
+				  				createOption(arr[i].children,level+1);
+				  			}
+				  		}
+				  		return option;
+				  	}
+
+				  	function createStr(num,str='--'){
+				  		var arr=new Array(num);
+				  		return arr.join(str);
+				  	}
+		    	},
+		    	getModel(){
+		    		var _this=this;
+
+		    		//获取栏目内容
+			      	axios.get('/index.php/api/admin/GetColumnModuleList').then(function(res){
+			      		var arr=res.data.data;
+				  		var option='';
+					  	for(var i=0,len=arr.length;i<len;i++){
+					  		option+='<option value='+arr[i].id+'>'+arr[i].ModuleName+'</option>';
+					  	}
+					  	var select=_this.$refs.selectModel;
+					  	select.innerHTML=option;
+				  	}).catch(function(err){
+
+				  	})
+
+				  	
+
+		    	},
+		      onSubmit() {
+		      	var _this=this;
+		      	if( _this.form.categoryId==''){
+		      		this.$message({
+			          message: '请选择栏目',
+			          type: 'warning'
+			        });
+			        return;
+		      	}
+		      	if( _this.form.cname==''){
+		      		this.$message({
+			          message: '栏目不能为空',
+			          type: 'warning'
+			        });
+			        return;
+		      	}
+		        axios.post('/index.php/api/admin/addColumn',{
+		        	pid:_this.form.categoryId,
+		        	cname:_this.form.cname,
+		        	model_id:_this.form.model_id
+		        }).then(function(res){
+		        	var res=res.data;
+		        	if(res.errorcode!=0){
+		        		_this.$message.error(res.errormsg);
+		        		return;
+		        	}
+		        	_this.$message({
+			          message: res.errormsg,
+			          type: 'success'
+			        });
+		        	_this.getColumn();
+		        	_this.form.cname='';
+		        }).catch(function(err){
+		        	_this.$message.error(err.message);
+		        })
+
+		      },
+		      toggleSelection(rows) {
+		        if (rows) {
+		          rows.forEach(row => {
+		            this.$refs.multipleTable.toggleRowSelection(row);
+		          });
+		        } else {
+		          this.$refs.multipleTable.clearSelection();
+		        }
+		      },
+		      handleSelectionChange(val) {
+		        this.multipleSelection = val;
+		      },
+		      handleEdit(index,data){
+		      	location.href="EditColumn.html?cid="+data.id;
+		      },
+		      handleDelete(index,data){
+		      	var _this=this;
+		      	axios.post('/index.php/api/admin/DeleteColumn',{
+		        	id:data.id
+		        }).then(function(res){
+		        	var res=res.data;
+		        	if(res.errorcode!=0){
+		        		_this.$message.error(res.errormsg);
+		        		return;
+		        	}
+		        	_this.$message({
+			          message: res.errormsg,
+			          type: 'success'
+			        });
+		        	_this.getColumn();
+		        	_this.form.cname='';
+		        }).catch(function(err){
+		        	_this.$message.error(err.message);
+		        })
+
+		      }
+		    }
+	    })
+	  </script>
+</body>
+</html>

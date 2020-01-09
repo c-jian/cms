@@ -1,0 +1,1237 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>设置字段</title>
+	<link rel="stylesheet" href="/static/lib/layui/css/layui.css">
+	<style>
+	/*reset*/
+	html,body{
+		height: 100%;
+		display: none;
+	}
+	body,li,ul,h1,h2,h3,h4,h5,h6,p{
+		padding:0;
+		margin:0;
+		font-size:14px;
+	}
+	ul,li{
+		list-style:none;
+	}
+	a{
+		text-decoration: none;
+		color:#000;
+	}
+
+	/*导航*/
+	.nav{
+		padding: 15px 20px;
+	    box-shadow: 0 2px 4px rgba(0,0,0,.08);
+	    margin-bottom: 20px;
+	    position: fixed;
+	    z-index: 100;
+	    width: 100%;
+	    background: #fff;
+	}
+	.nav-ul{
+		overflow: hidden;
+	}
+	.nav-item{
+		float: left;
+		color:#606266;
+		font-size:15px;
+	}
+	.nav-link{
+		color:#303133;
+		font-weight: bold;
+	}
+
+
+	.main{
+		padding-top:50px;
+		overflow: hidden;
+		display: table;
+		width:95%;
+		margin:0 auto;
+	}
+	.showarea{
+		display: table-cell;
+	}
+	.tip {
+	    padding: 8px 16px;
+	    background-color: #ecf8ff;
+	    border-radius: 4px;
+	    border-left: 5px solid #50bfff;
+	    margin: 20px 0;
+	}
+	.maxw500{
+		max-width:500px;
+	}
+	.uploadbox{
+		width:120px;
+		height:120px;
+		border-radius: 5px;
+		border:1px dashed #c0ccda;
+		text-align: center;
+		line-height: 120px;
+		cursor: pointer;
+		background-color: #fbfdff;
+		display: inline-block;
+		margin-left:10px;
+	}
+	.uploadbox:hover{
+		border-color: #409EFF;
+	}
+	.ArticleImgBox{
+		position: relative;
+		display: inline-block;
+	}
+	.ArticleImgBox{
+		max-height: 120px;
+		max-width: 120px;
+		border-radius: 5px;
+	}
+	.ArticleImgBox img{
+		max-height: 120px;
+		max-width: 120px;
+	}
+	.ArticleImgBox .mask{
+		width:100%;
+		height:100%;
+		position: absolute;
+		background: rgba(0,0,0,.5);
+		left:0;
+		top:0;
+		z-index: 100;
+		display: none;
+	}
+	.ArticleImgBox .layui-icon-delete{
+		position: absolute;
+		left:50%;
+		top:50%;
+		color:#fff;
+		z-index: 101;
+		font-size:20px;
+		margin-left:-10px;
+		margin-top:-10px;
+		cursor: pointer;
+		display: none;
+	}
+	.ArticleImgBox:hover .mask,.ArticleImgBox:hover .layui-icon-delete{
+		display:block;
+	}
+	
+	.floatleft{
+		float:left;
+	}
+
+	.preview{
+		padding-left:10px;
+		position: relative;
+	}
+	.preview::before{
+		content:'';
+		position: absolute;
+		left:0;
+		top:0;
+		border-left:1px solid #eee;
+		bottom:0;
+	}
+	.FieldForm{
+		width: 550px;
+	}
+
+	.submit-box{
+		margin-top:50px;
+	}
+
+	.btngroup{
+		position: absolute;
+		bottom: 6px;
+		left:345px;
+	}
+	.checkbox-item{
+		height: 38px;
+		margin-bottom: 10px;
+	}
+	.selectsetting .btngroup{
+		bottom:55px;
+		left:270px;
+	}
+	.checkboxsetting .btngroup{
+		bottom:6px;
+		left:330px;
+	}
+
+	.FormContentSetting .layui-form-item .layui-input-inline{
+		width:120px;
+	}
+
+	#container{
+		max-width:800px;
+	}
+	</style>
+</head>
+<body class="Article">
+
+	<!-- 导航 -->
+	<div class="nav">
+		<ul class="nav-ul">
+			<li class="nav-item"><a href="/" class="nav-link">首页</a><i class="layui-icon layui-icon-right"></i></li>
+			<li class="nav-item">添加内容</li>
+		</ul>
+	</div>
+
+	<div class="main">
+		
+		
+		<div class="layui-form showarea FieldForm" action="" lay-filter="SetFieldForm">
+			
+			<div class="scroll-box">
+
+				<fieldset class="layui-elem-field layui-field-title" style="margin-top: 20px;">
+				  <legend>字段信息</legend>
+				</fieldset>
+
+		
+		    	<div class="layui-form-item">
+		            <label class="layui-form-label">表单类型</label>
+		            <div class="layui-input-block">
+		                <select name="FormType" lay-verify="required" id="FormType" lay-filter="FormType">
+		                	<option value="1">输入框</option>
+		                	<option value="2">文本域</option>
+		                	<option value="3">编辑器</option>
+		                	<option value="4">下拉框</option>
+		                	<option value="5">复选框</option>
+		                	<option value="6">单选框</option>
+		                	<option value="7">开关</option>
+		                	<option value="8">密码框</option>
+		                	<option value="9">日期选择框</option>
+		                	<option value="10">文件上传</option>
+		                	<option value="11">图片上传</option>
+		                </select>
+		            </div>
+		        </div>
+
+				<div class="layui-form-item">
+		            <label class="layui-form-label">表单标题</label>
+		            <div class="layui-input-block">
+		                <input type="text" name="FieldTitle" required  lay-verify="required" placeholder="标题" autocomplete="off" class="layui-input">
+		            </div>
+		        </div>
+
+		        <div class="layui-form-item">
+		            <label class="layui-form-label">字段名称</label>
+		            <div class="layui-input-block">
+		                <input type="text" name="FieldName" required  lay-verify="required" placeholder="字段名称" autocomplete="off" class="layui-input">
+		            </div>
+		        </div>
+
+		        <div class="layui-form-item">
+		            <label class="layui-form-label">字段类型</label>
+		            <div class="layui-input-block">
+		                <select name="FieldType" lay-verify="required" id="FieldType">
+					        <option value="">请选择字段类型</option>
+					        <optgroup label="文本">
+					            <option value="VARCHAR">VARCHAR</option>
+					            <option value="CHAR">CHAR</option>
+					            <option value="TEXT">TEXT</option>
+					        </optgroup>
+					        <optgroup label="数字">
+					            <option value="INT">INT</option>
+					            <option value="TINYINT">TINYINT</option>
+					            <option value="SMALLINT">SMALLINT</option>
+					            <option value="MEDIUMIINT">MEDIUMIINT</option>
+					            <option value="DECIMAL">DECIMAL</option>
+					            <option value="MEDIUMIINT">FLOAT</option>
+					            <option value="DOUBLE">DOUBLE</option>
+					        </optgroup>
+					        <optgroup label="日期和时间">
+					            <option value="DATE">DATE</option>
+					            <option value="DATETIME">DATETIME</option>
+					        </optgroup>
+					    </select>
+		            </div>
+		        </div>
+
+		        <div class="layui-form-item">
+		            <label class="layui-form-label">字段长度</label>
+		            <div class="layui-input-block">
+		                <input type="text" name="FieldLength" placeholder="字段长度" autocomplete="off" class="layui-input">
+		            </div>
+		        </div>
+		        <div class="layui-form-item layui-form-text">
+		            <label class="layui-form-label">默认值</label>
+		            <div class="layui-input-block">
+		            <input type="text" name="DefaultValue" placeholder="默认值" autocomplete="off" class="layui-input">
+		            </div>
+		        </div>
+		        <div class="layui-form-item layui-form-text">
+		            <label class="layui-form-label">注释内容</label>
+		            <div class="layui-input-block">
+		            <input type="text" name="FieldComment" placeholder="字段注释内容" autocomplete="off" class="layui-input">
+		            </div>
+		        </div>
+
+		        <div class="layui-form-item layui-form-text">
+		            <label class="layui-form-label">排序</label>
+		            <div class="layui-input-block">
+		            <input type="text" name="sort" placeholder="排序" autocomplete="off" class="layui-input">
+		            </div>
+		        </div>
+
+				<fieldset class="layui-elem-field layui-field-title" style="margin-top: 20px;">
+				  <legend>表单设置</legend>
+				</fieldset>
+				
+
+				<div class="layui-form-item">
+		            <label class="layui-form-label">表单Tips</label>
+		            <div class="layui-input-block">
+		                <input type="text" placeholder="tip" autocomplete="off" class="layui-input" id="FormItemTip">
+		            </div>
+		        </div>
+
+				<div class="layui-form-item">
+		            <label class="layui-form-label">表单class</label>
+		            <div class="layui-input-block">
+		                <input type="text" placeholder="class" autocomplete="off" class="layui-input" id="FormItemClass">
+		            </div>
+		        </div>
+
+		        <div class="layui-form-item">
+		            <label class="layui-form-label">表单id</label>
+		            <div class="layui-input-block">
+		                <input type="text" placeholder="id" autocomplete="off" class="layui-input" id="FormItemId">
+		            </div>
+		        </div>
+
+		        <div class="layui-form-item">
+		            <label class="layui-form-label">是否必选</label>
+		            <div class="layui-input-block">
+		                <input type="radio" value="1" title="是" name="required">
+		                <input type="radio" value="0" title="否" name="required" checked>
+		            </div>
+		        </div>
+
+				<div class="FormContentSetting">
+
+					<!-- <div class="layui-form-item">
+			            <label class="layui-form-label">placeholder</label>
+			            <div class="layui-input-block">
+			                <input type="text" placeholder="设置placeholder属性" autocomplete="off" class="layui-input">
+			            </div>
+			        </div>
+
+			        <div class="layui-form-item">
+			            <label class="layui-form-label">autocomplete</label>
+			            <div class="layui-input-block">
+			                <input type="radio" name="autocomplete" value="on" title="on">
+		      				<input type="radio" name="autocomplete" value="off" title="off" checked="">
+			            </div>
+			        </div> -->
+
+					<!-- <div class="layui-form-item">
+			            <label class="layui-form-label">复选框设置</label>
+			            <div class="layui-input-block">
+			            	<div class="checkbox-group">
+				            	<div class="checkbox-item">
+				                	<input type="checkbox" lay-skin="switch" lay-text="勾选|取消">
+				                	<input type="text" placeholder="表单文本" autocomplete="off" class="layui-input layui-input-inline">
+				                	<input type="text" placeholder="name" autocomplete="off" class="layui-input layui-input-inline">
+				                </div>
+				                <div class="checkbox-item">
+				                	<input type="checkbox" lay-skin="switch" lay-text="勾选|取消">
+				                	<input type="text" placeholder="表单文本" autocomplete="off" class="layui-input layui-input-inline">
+				                	<input type="text" placeholder="name" autocomplete="off" class="layui-input layui-input-inline">
+				                </div>
+				                <div class="checkbox-item">
+				                	<input type="checkbox" lay-skin="switch" lay-text="勾选|取消">
+				                	<input type="text" placeholder="表单文本" autocomplete="off" class="layui-input layui-input-inline">
+				                	<input type="text" placeholder="name" autocomplete="off" class="layui-input layui-input-inline">
+				                </div>
+				            </div>
+			                <span class="btngroup">
+			                	<button class="layui-icon layui-icon-add-1 layui-btn layui-btn-normal layui-btn-xs addbtn"></button>
+			                	<button class="layui-icon layui-icon-delete layui-btn layui-btn-danger layui-btn-xs deletebtn"></button>
+			            	</span>
+			            </div>
+			        </div>
+
+
+					<div class="layui-form-item">
+			            <label class="layui-form-label">下拉框设置</label>
+			            <div class="layui-input-block selectsetting">
+			            	<div class="select-group">
+			            		<div class="checkbox-item">
+				                	<input type="text" placeholder="name" autocomplete="off" class="layui-input layui-input-inline">
+									<input type="text" placeholder="文本" autocomplete="off" class="layui-input layui-input-inline">
+				                </div>
+				                <div class="checkbox-item">
+				                	<input type="text" placeholder="name" autocomplete="off" class="layui-input layui-input-inline">
+									<input type="text" placeholder="文本" autocomplete="off" class="layui-input layui-input-inline">
+				                </div>
+				                <div class="checkbox-item">
+				                	<input type="text" placeholder="name" autocomplete="off" class="layui-input layui-input-inline">
+									<input type="text" placeholder="文本" autocomplete="off" class="layui-input layui-input-inline">
+				                </div>
+				            </div>
+				            <input type="text" lay-verify="url" placeholder="API地址" autocomplete="off" class="layui-input">
+			                <span class="btngroup">
+			                	<button class="layui-icon layui-icon-add-1 layui-btn layui-btn-normal layui-btn-xs addbtn"></button>
+			                	<button class="layui-icon layui-icon-delete layui-btn layui-btn-danger layui-btn-xs deletebtn"></button>
+			            	</span>
+			            </div>
+			        </div>
+					
+					
+					<div class="layui-form-item">
+			            <label class="layui-form-label">开关设置</label>
+			            <div class="layui-input-block">
+			            	<div class="checkbox-group">
+				            	<div class="checkbox-item">
+				                	<input type="checkbox" lay-skin="switch" lay-text="开|关">
+				                	<input type="text" placeholder="表单文本" autocomplete="off" class="layui-input layui-input-inline">
+				                	<input type="text" placeholder="name" autocomplete="off" class="layui-input layui-input-inline">
+				                </div>
+				            </div>
+			            </div>
+			        </div>
+
+					<div class="layui-form-item">
+			            <label class="layui-form-label">上传接口</label>
+			            <div class="layui-input-block">
+			            	<div class="checkbox-group">
+				            	<div class="checkbox-item">
+				                	<input type="text" lay-verify="url" placeholder="上传API地址" class="layui-input" autocomplete="off">
+				                </div>
+				            </div>
+			            </div>
+			        </div> -->
+
+				</div>
+				
+				<div class="layui-form-item">
+		            <label class="layui-form-label"></label>
+		            <div class="layui-input-block">
+		                <button type="button" class="layui-btn layui-btn-normal preview-btn">预览</button>
+		            </div>
+		        </div>
+
+				<div class="layui-form-item submit-box">
+				    <div class="layui-input-block">
+				      <button class="layui-btn" lay-submit lay-filter="SetFieldSubmit">保存</button>
+				      <button class="layui-btn layui-btn-primary return">返回</button>
+				    </div>
+				</div>
+				
+				<!-- 字段id-用于更新字段信息 -->
+				<input type="hidden" name="id" value="">
+				<!-- 修改前原始字段名称 -->
+				<input type="hidden" name="initName" value="">
+			</div>
+		</div>
+		
+		<!-- 预览表单内容 -->
+		<div class="preview showarea">
+
+			<fieldset class="layui-elem-field layui-field-title" style="margin-top: 20px;">
+			  <legend>预览</legend>
+			</fieldset>
+			<div class="layui-form" action="">
+			<div class="preview-content">
+				<div class="layui-form-item">
+		            <label class="layui-form-label">标题</label>
+		            <div class="layui-input-inline">
+		                <input type="text" name="FieldLength" placeholder="" autocomplete="off" class="layui-input">
+		            </div>
+		            <div class="layui-form-mid layui-word-aux">这个一个文本框</div>
+		        </div>
+		    </div>
+			</div>
+
+
+		</div>
+
+	</div>
+
+	<script src="/static/js/jquery.min.js"></script>
+	<script src="/static/js/config.js"></script>
+
+	<!-- 配置文件 -->
+    <script type="text/javascript" src="/static/lib/ueditor/ueditor.config.js"></script>
+    <!-- 编辑器源码文件 -->
+    <script type="text/javascript" src="/static/lib/ueditor/ueditor.all.js"></script>
+
+	<script src="/static/lib/layui/layui.js"></script>
+  	<script>
+		
+		var wh=$(window).height()-50;
+		$('.scroll-box').css({height:wh,'overflow-y':'auto','padding-right':15})
+
+		function getQueryParam(param){
+			var search=location.search.substring(1);
+			var searchArr=search.split('&');
+			for(var i=0,len=searchArr.length;i<len;i++){
+				var paramArr=searchArr[i].split('=');
+				if(paramArr[0]==param)return paramArr[1];
+			}
+			return false;
+		}
+
+		var model_id=getQueryParam('model_id');//模型id
+		var ModuleTableName=getQueryParam('ModuleTableName');//模型名称
+
+
+		var id=getQueryParam('id') || '';//字段id
+		if(id){
+			$('[name="id"]').val(id);
+		}
+
+  		layui.use(['form', 'layedit','upload','laydate'], function(){
+		  var form = layui.form
+		  ,layer = layui.layer
+		  ,layedit = layui.layedit
+		  upload=layui.upload,
+		  laydate=layui.laydate;
+		  
+
+		  	if(!model_id){
+				layer.msg('当前缺少模型id，功能不可用');
+				return false;
+			}
+			if(!ModuleTableName){
+				layer.msg('当前缺少模型名称，功能不可用');
+				return false;
+			}
+
+
+			//返回
+			$('.return').click(function(){
+			  	location.href='/FieldManagement.html?model_id='+model_id+'&ModuleTableName='+ModuleTableName;
+			  	return false;
+			})
+
+		  
+
+		  	window.FormType='1';//默认是输入框
+		  	//编辑初始化
+			if(id){
+				$.ajax({
+					url:config['GetFieldManagementById_API'],
+					data:{id:id},
+					dataType:'json',
+					success:function(res){
+						var res=res.data;
+						form.val('SetFieldForm',res);
+						$('[name="initName"]').val(res.FieldName);
+						SetPreview(res.FormType,JSON.parse(res.FormConfig));
+						SetPreviewContent(JSON.parse(res.FormConfig));
+					}
+				})
+			}
+
+		  	//监听下拉框
+		  	form.on('select(FormType)', function(data){
+		  		SetPreview(data.value);
+			}); 
+
+			//预览设置
+			function SetPreview(type,config){
+				
+				//编辑时，需要初始化表单设置
+				if(config){
+					initFormSet(type,config);
+					return false;
+				}
+
+				FormType=type;//用于其他地方根据这个做判断
+		  		var tpl='';
+		  		var FormTpl='';
+			  	switch(type){
+
+				  	case '1':
+				  		//输入框
+				  		tpl='<div class="layui-form-item">'+
+					            '<label class="layui-form-label">标题</label>'+
+					            '<div class="layui-input-inline">'+
+					                '<input type="text" placeholder="" class="layui-input">'+
+					            '</div>'+
+					            '<div class="layui-form-mid layui-word-aux">这个一个文本框</div>'+
+					        '</div>';
+					  	break;
+				  	case '2':
+				  		//文本域
+				  		tpl='<div class="layui-form-item">'+
+					            '<label class="layui-form-label">标题</label>'+
+					            '<div class="layui-input-inline">'+
+					                '<textarea name="" placeholder="" class="layui-textarea"></textarea>'+
+					            '</div>'+
+					            '<div class="layui-form-mid layui-word-aux">这个一个文本域</div>'+
+					        '</div>';
+				  	break;
+				  	case '3':
+				  		//编辑器
+				  		tpl='<script id="container" name="content" type="text/plain"><\/script>';
+				  	break;
+				  	case '4':
+				  		//下拉框
+				  		tpl='<div class="layui-form-item">'+
+					            '<label class="layui-form-label">标题</label>'+
+					            '<div class="layui-input-inline">'+
+					                '<select></select> '+
+					            '</div>'+
+					            '<div class="layui-form-mid layui-word-aux">这个一个文本域</div>'+
+					        '</div>';
+					    FormTpl='<div class="layui-form-item">'+
+						            '<label class="layui-form-label">下拉框设置</label>'+
+						            '<div class="layui-input-block selectsetting">'+
+						            	'<div class="select-group group">'+
+						            		'<div class="checkbox-item form-set-item">'+
+						            			'<input type="text" placeholder="value" autocomplete="off" class="layui-input layui-input-inline value">'+
+												'<input type="text" placeholder="文本" autocomplete="off" class="layui-input layui-input-inline text">'+
+							                '</div>'+
+							            '</div>'+
+							            '<input type="text" lay-verify="url" placeholder="API地址" autocomplete="off" class="layui-input url">'+
+						                '<span class="btngroup">'+
+						                	'<button class="layui-icon layui-icon-add-1 layui-btn layui-btn-normal layui-btn-xs addbtn"></button>'+
+						                	'<button class="layui-icon layui-icon-delete layui-btn layui-btn-danger layui-btn-xs deletebtn"></button>'+
+						            	'</span>'+
+						            '</div>'+
+						        '</div>';
+				  	break;
+				  	case '5':
+				  		//复选框
+				  		tpl='<div class="layui-form-item">'+
+					            '<label class="layui-form-label">标题</label>'+
+					            '<div class="layui-input-inline">'+
+					                '<input type="checkbox" name="" title="推荐" lay-skin="primary" checked><input type="checkbox" name="" title="置顶" lay-skin="primary">'+
+					            '</div>'+
+					            '<div class="layui-form-mid layui-word-aux">这个一个文本域</div>'+
+					        '</div>';
+					    FormTpl='<div class="layui-form-item">'+
+						            '<label class="layui-form-label">复选框设置</label>'+
+						            '<div class="layui-input-block">'+
+						            	'<div class="checkbox-group group">'+
+							            	'<div class="checkbox-item form-set-item">'+
+							                	'<input type="checkbox" lay-skin="switch" lay-text="勾选|取消">'+
+							                	'<input type="text" placeholder="表单文本" autocomplete="off" class="layui-input layui-input-inline text">'+
+							                	'<input type="text" placeholder="name" autocomplete="off" class="layui-input layui-input-inline name">'+
+							                '</div>'+
+							            '</div>'+
+						                '<span class="btngroup">'+
+						                	'<button class="layui-icon layui-icon-add-1 layui-btn layui-btn-normal layui-btn-xs addbtn"></button>'+
+						                	'<button class="layui-icon layui-icon-delete layui-btn layui-btn-danger layui-btn-xs deletebtn"></button>'+
+						            	'</span>'+
+						            '</div>'+
+						        '</div>';
+				  	break;
+				  	case '6':
+				  		//单选框
+				  		tpl='<div class="layui-form-item">'+
+					            '<label class="layui-form-label">标题</label>'+
+					            '<div class="layui-input-inline">'+
+					                '<input type="radio" name="status" value="1" title="是"><input type="radio" name="status" value="0" title="否" checked>'+
+					            '</div>'+
+					            '<div class="layui-form-mid layui-word-aux">这个一个文本域</div>'+
+					        '</div>';
+					    FormTpl='<div class="layui-form-item">'+
+						            '<label class="layui-form-label">单选框设置</label>'+
+						            '<div class="layui-input-block">'+
+						            	'<div class="checkbox-group group">'+
+							            	'<div class="checkbox-item form-set-item">'+
+							                	'<input type="checkbox" lay-skin="switch" lay-text="勾选|取消">'+
+							                	'<input type="text" placeholder="value" autocomplete="off" class="layui-input layui-input-inline value">'+
+							                	'<input type="text" placeholder="表单文本" autocomplete="off" class="layui-input layui-input-inline text">'+
+							                '</div>'+
+							            '</div>'+
+						                '<span class="btngroup">'+
+						                	'<button class="layui-icon layui-icon-add-1 layui-btn layui-btn-normal layui-btn-xs addbtn"></button>'+
+						                	'<button class="layui-icon layui-icon-delete layui-btn layui-btn-danger layui-btn-xs deletebtn"></button>'+
+						            	'</span>'+
+						            '</div>'+
+						        '</div>';
+				  	break;
+				  	case '7':
+				  		//开关
+				  		tpl='<div class="layui-form-item">'+
+					            '<label class="layui-form-label">标题</label>'+
+					            '<div class="layui-input-inline">'+
+					                '<input type="checkbox" name="yyy" lay-skin="switch" lay-text="ON|OFF" checked>'+
+					            '</div>'+
+					            '<div class="layui-form-mid layui-word-aux">这个一个文本域</div>'+
+					        '</div>';
+					    FormTpl='<div class="layui-form-item">'+
+						            '<label class="layui-form-label">开关设置</label>'+
+						            '<div class="layui-input-block">'+
+						            	'<div class="checkbox-group">'+
+							            	'<div class="checkbox-item">'+
+							                	'<input type="checkbox" lay-skin="switch" lay-text="开|关">'+
+							                	'<input type="text" placeholder="表单文本" autocomplete="off" class="layui-input layui-input-inline text">'+
+							                '</div>'+
+							            '</div>'+
+						            '</div>'+
+						        '</div>';
+				  	break;
+				  	case '8':
+				  		//密码框
+				  		tpl='<div class="layui-form-item">'+
+					            '<label class="layui-form-label">标题</label>'+
+					            '<div class="layui-input-inline">'+
+					                '<input type="password" name="" placeholder="" autocomplete="off" class="layui-input">'+
+					            '</div>'+
+					            '<div class="layui-form-mid layui-word-aux">密码框</div>'+
+					        '</div>';
+				  	break;
+				  	case '9':
+				  		//日期选择框
+				  		tpl='<div class="layui-form-item">'+
+					            '<label class="layui-form-label">标题</label>'+
+					            '<div class="layui-input-inline">'+
+					                '<input type="text" class="layui-input" id="date" autocomplete="off">'+
+					            '</div>'+
+					            '<div class="layui-form-mid layui-word-aux">日期选择框</div>'+
+					        '</div>';
+				  	break;
+				  	case '10':
+				  		//文件上传
+				  		tpl='<div class="layui-form-item">'+
+					            '<label class="layui-form-label">标题</label>'+
+					            '<div class="layui-input-inline">'+
+					                '<button type="button" class="layui-btn" id="test1"><i class="layui-icon">&#xe67c;</i>上传文件</button>'+
+					            '</div>'+
+					            '<div class="layui-form-mid layui-word-aux">文件上传</div>'+
+					        '</div>';
+					    FormTpl='<div class="layui-form-item">'+
+						            '<label class="layui-form-label">上传接口</label>'+
+						            '<div class="layui-input-block">'+
+						            	'<div class="checkbox-group">'+
+							            	'<div class="checkbox-item">'+
+							                	'<input type="text" lay-verify="url" placeholder="上传API地址" class="layui-input url" autocomplete="off" class="url">'+
+							                '</div>'+
+							            '</div>'+
+						            '</div>'+
+						        '</div>';
+				  	break;
+				  	case '11':
+				  		//图片上传
+				  		tpl='<div class="layui-form-item">'+
+					            '<label class="layui-form-label">标题</label>'+
+					            '<div class="layui-input-inline">'+
+					                '<button type="button" class="layui-btn" id="test1"><i class="layui-icon">&#xe67c;</i>上传图片</button>'+
+					            '</div>'+
+					            '<div class="layui-form-mid layui-word-aux">图片上传</div>'+
+					        '</div>';
+					    FormTpl='<div class="layui-form-item">'+
+						            '<label class="layui-form-label">上传接口</label>'+
+						            '<div class="layui-input-block">'+
+						            	'<div class="checkbox-group">'+
+							            	'<div class="checkbox-item">'+
+							                	'<input type="text" lay-verify="url" placeholder="上传API地址" class="layui-input url" autocomplete="off">'+
+							                '</div>'+
+							            '</div>'+
+						            '</div>'+
+						        '</div>';
+				  	break;
+
+			  	}
+
+			  	$('.preview-content').html(tpl);//预览视图
+			  	$('.FormContentSetting').html(FormTpl);//表单设置
+
+			  	//重新渲染表单
+			  	form.render();
+
+			  	//日期实例
+			  	if(type==9){
+					laydate.render({
+					    elem: '#date'
+					});
+			  	}
+
+			  	if(type==3){
+			  		var ue = UE.getEditor('container');
+			  	}
+
+			  	//表单项添加和删除事件
+			  	$('.addbtn').click(function(){
+			  		var html=$('.group').find('.form-set-item:last').html();
+			  		$('.group').append('<div class="checkbox-item form-set-item">'+html+'</div>');
+			  		form.render();
+			  		return false;
+			  	})
+			  	$('.deletebtn').click(function(){
+			  		var html=$('.group').find('.form-set-item:last').remove();
+			  		form.render();
+			  		return false;
+			  	})
+
+			}
+
+			//初始化表单设置
+			function initFormSet(type,config){
+
+				$('#FormItemTip').val(config.tip);//表单tip
+				$('#FormItemClass').val(config.class);//表单class
+				$('#FormItemId').val(config.id);//表单id
+
+				FormType=type;//用于其他地方根据这个做判断
+		  		var FormTpl='';
+			  	switch(type){
+
+				  	case '1':
+				  		//输入框
+					  	break;
+				  	case '2':
+				  		//文本域
+				  	break;
+				  	case '3':
+				  		//编辑器
+
+				  	break;
+				  	case '4':
+				  		//下拉框
+					    FormTpl = '<div class="layui-form-item">'+
+						            '<label class="layui-form-label">下拉框设置</label>'+
+						            '<div class="layui-input-block selectsetting">'+
+						            	'<div class="select-group group">';
+
+						        	for(var i=0,len=config.select.length;i<len;i++){
+						        		FormTpl+='<div class="checkbox-item form-set-item">'+
+							            			'<input type="text" placeholder="value" autocomplete="off" value="'+config.select[i].value+'" class="layui-input layui-input-inline value">'+
+													'<input type="text" placeholder="文本" autocomplete="off" value="'+config.select[i].text+'" class="layui-input layui-input-inline text">'+
+								                '</div>';
+						        	}
+
+							FormTpl+='</div>'+
+								            '<input type="text" lay-verify="url" placeholder="API地址" autocomplete="off" class="layui-input url" value="'+config.api+'">'+
+							                '<span class="btngroup">'+
+							                	'<button class="layui-icon layui-icon-add-1 layui-btn layui-btn-normal layui-btn-xs addbtn"></button>'+
+							                	'<button class="layui-icon layui-icon-delete layui-btn layui-btn-danger layui-btn-xs deletebtn"></button>'+
+							            	'</span>'+
+							            '</div>'+
+							        '</div>';
+
+				  	break;
+				  	case '5':
+				  		//复选框
+						FormTpl = '<div class="layui-form-item">'+
+						            '<label class="layui-form-label">复选框设置</label>'+
+						            '<div class="layui-input-block checkboxsetting">'+
+						            	'<div class="checkbox-group group">';
+
+						        	for(var i=0,len=config.checkbox.length;i<len;i++){
+						        		FormTpl+='<div class="checkbox-item form-set-item">';
+					        						if(config.checkbox[i].checked){
+					        							FormTpl+='<input type="checkbox" lay-skin="switch" lay-text="勾选|取消" checked>';
+					        						}else{
+					        							FormTpl+='<input type="checkbox" lay-skin="switch" lay-text="勾选|取消">';
+					        						}
+													FormTpl+='<input type="text" placeholder="文本" autocomplete="off" value="'+config.checkbox[i].text+'" class="layui-input layui-input-inline text">'+
+														'<input type="text" placeholder="name" autocomplete="off" value="'+config.checkbox[i].name+'" class="layui-input layui-input-inline name">'+
+								                '</div>';
+						        	}
+
+							FormTpl+='</div>'+
+							                '<span class="btngroup">'+
+							                	'<button class="layui-icon layui-icon-add-1 layui-btn layui-btn-normal layui-btn-xs addbtn"></button>'+
+							                	'<button class="layui-icon layui-icon-delete layui-btn layui-btn-danger layui-btn-xs deletebtn"></button>'+
+							            	'</span>'+
+							            '</div>'+
+							        '</div>';
+				  	break;
+				  	case '6':
+				  		//单选框
+						FormTpl = '<div class="layui-form-item">'+
+						            '<label class="layui-form-label">单选框设置</label>'+
+						            '<div class="layui-input-block">'+
+						            	'<div class="checkbox-group group">';
+
+						        	for(var i=0,len=config.radio.length;i<len;i++){
+						        		FormTpl+='<div class="checkbox-item form-set-item">';
+						        					if(config.radio[i].checked){
+					        							FormTpl+='<input type="checkbox" lay-skin="switch" lay-text="勾选|取消" checked>';
+					        						}else{
+					        							FormTpl+='<input type="checkbox" lay-skin="switch" lay-text="勾选|取消">';
+					        						}
+							            			FormTpl+='<input type="text" placeholder="value" autocomplete="off" value="'+config.radio[i].value+'" class="layui-input layui-input-inline value">'+
+													'<input type="text" placeholder="文本" autocomplete="off" value="'+config.radio[i].text+'" class="layui-input layui-input-inline text">'+
+								                '</div>';
+						        	}
+
+							FormTpl+='</div>'+
+							                '<span class="btngroup">'+
+							                	'<button class="layui-icon layui-icon-add-1 layui-btn layui-btn-normal layui-btn-xs addbtn"></button>'+
+							                	'<button class="layui-icon layui-icon-delete layui-btn layui-btn-danger layui-btn-xs deletebtn"></button>'+
+							            	'</span>'+
+							            '</div>'+
+							        '</div>';
+				  	break;
+				  	case '7':
+				  		//开关
+					    FormTpl='<div class="layui-form-item">'+
+						            '<label class="layui-form-label">开关设置</label>'+
+						            '<div class="layui-input-block">'+
+						            	'<div class="checkbox-group">'+
+							            	'<div class="checkbox-item">';
+							            		if(config.switch.checked){
+							            			FormTpl+='<input type="checkbox" lay-skin="switch" lay-text="开|关" checked>'
+							            		}else{
+							            			FormTpl+='<input type="checkbox" lay-skin="switch" lay-text="开|关">'
+							            		}
+							                	FormTpl+='<input type="text" placeholder="表单文本" autocomplete="off" value="'+config.switch.text+'" class="layui-input layui-input-inline text">'+
+							                '</div>'+
+							            '</div>'+
+						            '</div>'+
+						        '</div>';
+				  	break;
+				  	case '8':
+				  		//密码框
+				  	break;
+				  	case '9':
+				  		//日期选择框
+				  	break;
+				  	case '10':
+				  		//文件上传
+					    FormTpl='<div class="layui-form-item">'+
+						            '<label class="layui-form-label">上传接口</label>'+
+						            '<div class="layui-input-block">'+
+						            	'<div class="checkbox-group">'+
+							            	'<div class="checkbox-item">'+
+							                	'<input type="text" lay-verify="url" placeholder="上传API地址" class="layui-input url" value="'+config.api+'" autocomplete="off">'+
+							                '</div>'+
+							            '</div>'+
+						            '</div>'+
+						        '</div>';
+				  	break;
+				  	case '11':
+				  		//图片上传
+					    FormTpl='<div class="layui-form-item">'+
+						            '<label class="layui-form-label">上传接口</label>'+
+						            '<div class="layui-input-block">'+
+						            	'<div class="checkbox-group">'+
+							            	'<div class="checkbox-item">'+
+							                	'<input type="text" lay-verify="url" placeholder="上传API地址" class="layui-input url" value="'+config.api+'" autocomplete="off">'+
+							                '</div>'+
+							            '</div>'+
+						            '</div>'+
+						        '</div>';
+				  	break;
+
+			  	}
+
+			  	$('.FormContentSetting').html(FormTpl);//表单设置
+
+			  	//重新渲染表单
+			  	form.render();
+
+			  	//日期实例
+			  	if(type==9){
+					laydate.render({
+					    elem: '#date'
+					});
+			  	}
+
+			  	//表单项添加和删除事件
+			  	$('.addbtn').click(function(){
+			  		var html=$('.group').find('.form-set-item:last').html();
+			  		$('.group').append('<div class="checkbox-item form-set-item">'+html+'</div>');
+			  		form.render();
+			  		return false;
+			  	})
+			  	$('.deletebtn').click(function(){
+			  		var html=$('.group').find('.form-set-item:last').remove();
+			  		form.render();
+			  		return false;
+			  	})
+
+
+			}
+
+			//预览按钮事件
+			$('.preview-btn').click(function(){
+				//更改右侧预览信息
+				var config=GetContentBySetting();
+				SetPreviewContent(config)
+			})
+			//预览内容设置
+			var ConfigAPI=config;
+			function SetPreviewContent(config){
+				
+				var tpl='';
+				switch(FormType){
+
+					case '1':
+						//输入框
+				  		tpl='<div class="layui-form-item">'+
+					            '<label class="layui-form-label">'+config.title+'</label>'+
+					            '<div class="layui-input-inline">'+
+					                '<input type="text" placeholder="" class="layui-input">'+
+					            '</div>'+
+					            '<div class="layui-form-mid layui-word-aux">'+config.tip+'</div>'+
+					        '</div>';
+					break;
+					case '2':
+						//文本域
+				  		tpl='<div class="layui-form-item">'+
+					            '<label class="layui-form-label">'+config.title+'</label>'+
+					            '<div class="layui-input-inline">'+
+					                '<textarea name="" placeholder="" class="layui-textarea"></textarea>'+
+					            '</div>'+
+					            '<div class="layui-form-mid layui-word-aux">'+config.tip+'</div>'+
+					        '</div>';
+					break;
+					case '3':
+						//编辑器
+						// $.ajax({
+						// 	url:ConfigAPI['GetConfig_API'],
+						// 	data:{type:'system'},
+						// 	dataType:'json',
+						// 	success:function(data){
+						// 		var SystemConfig=JSON.parse(data.data);
+						// 		switch(SystemConfig.Editor){
+						// 			case 'UEditor':
+						// 				console.log(1)
+						// 			break;
+						// 			case '':
+
+						// 			break;
+						// 		}
+						// 	}
+						// })
+						tpl='<script id="container" name="content" type="text/plain"><\/script>';
+					break;
+					case '4':
+						//下拉框
+						tpl='<div class="layui-form-item">'+
+					            '<label class="layui-form-label">'+config.title+'</label>'+
+					            '<div class="layui-input-inline">'+
+					            '<select>';
+					    for(var i=0,len=config.select.length;i<len;i++){
+					    	tpl+='<option value="'+config.select[i].value+'">'+config.select[i].text+'</option>';
+					    }
+					    tpl+='</select></div>'+
+					            '<div class="layui-form-mid layui-word-aux">'+config.tip+'</div>'+
+					        '</div>';
+					break;
+					case '5':
+						//复选框
+						tpl='<div class="layui-form-item">'+
+					            '<label class="layui-form-label">'+config.title+'</label>'+
+					            '<div class="layui-input-inline">'
+					    for(var i=0,len=config.checkbox.length;i<len;i++){
+					    	if(config.checkbox[i].checked){
+					    		tpl+='<input type="checkbox" title="'+config.checkbox[i].text+'" lay-skin="primary" checked>'
+					    	}else{
+					    		tpl+='<input type="checkbox" title="'+config.checkbox[i].text+'" lay-skin="primary">'
+					    	}
+					    }
+					    tpl+='</div>'+
+					            '<div class="layui-form-mid layui-word-aux">'+config.tip+'</div>'+
+					        '</div>';
+					break;
+					case '6':
+						//单选框
+						tpl='<div class="layui-form-item">'+
+					            '<label class="layui-form-label">'+config.title+'</label>'+
+					            '<div class="layui-input-inline">'
+					    for(var i=0,len=config.radio.length;i<len;i++){
+					    	if(config.radio[i].checked){
+					    		tpl+='<input type="radio" name="text" title="'+config.radio[i].text+'" value="'+config.radio[i].value+'" checked>'
+					    	}else{
+					    		tpl+='<input type="radio" name="text" title="'+config.radio[i].text+'" value="'+config.radio[i].value+'">'
+					    	}
+					    }
+					    tpl+='</div>'+
+					            '<div class="layui-form-mid layui-word-aux">'+config.tip+'</div>'+
+					        '</div>';
+					break;
+					case '7':
+						//开关
+						tpl='<div class="layui-form-item">'+
+					            '<label class="layui-form-label">'+config.title+'</label>'+
+					            '<div class="layui-input-inline">'
+				    	if(config.switch.checked){
+				    		tpl+='<input type="checkbox" lay-skin="switch" lay-text="'+config.switch.text+'" checked>'
+				    	}else{
+				    		tpl+='<input type="checkbox" lay-skin="switch" lay-text="'+config.switch.text+'">'
+				    	}
+					    tpl+='</div>'+
+					            '<div class="layui-form-mid layui-word-aux">'+config.tip+'</div>'+
+					        '</div>';
+					break;
+					case '8':
+						//密码框
+				  		tpl='<div class="layui-form-item">'+
+					            '<label class="layui-form-label">'+config.title+'</label>'+
+					            '<div class="layui-input-inline">'+
+					                '<input type="password" placeholder="" class="layui-input">'+
+					            '</div>'+
+					            '<div class="layui-form-mid layui-word-aux">'+config.tip+'</div>'+
+					        '</div>';
+					break;
+					case '9':
+						//日期选择框
+						tpl='<div class="layui-form-item">'+
+					            '<label class="layui-form-label">'+config.title+'</label>'+
+					            '<div class="layui-input-inline">'+
+					                '<input type="text" class="layui-input" id="date" autocomplete="off">'+
+					            '</div>'+
+					            '<div class="layui-form-mid layui-word-aux">'+config.tip+'</div>'+
+					        '</div>';
+					break;
+					case '10':
+						//文件上传
+						tpl='<div class="layui-form-item">'+
+					            '<label class="layui-form-label">'+config.title+'</label>'+
+					            '<div class="layui-input-inline">'+
+					                '<button type="button" class="layui-btn" id="test1"><i class="layui-icon">&#xe67c;</i>上传文件</button>'+
+					            '</div>'+
+					            '<div class="layui-form-mid layui-word-aux">'+config.tip+'</div>'+
+					        '</div>';
+					break;
+					case '11':
+						//图片上传
+						tpl='<div class="layui-form-item">'+
+					            '<label class="layui-form-label">'+config.title+'</label>'+
+					            '<div class="layui-input-inline">'+
+					                '<button type="button" class="layui-btn" id="test1"><i class="layui-icon">&#xe67c;</i>图片上传</button>'+
+					            '</div>'+
+					            '<div class="layui-form-mid layui-word-aux">'+config.tip+'</div>'+
+					        '</div>';
+					break;
+				}
+
+				$('.preview-content').html(tpl);//更新预览视图
+				if (FormType=='3') {
+					var ue = UE.getEditor('container');
+				}
+				form.render();
+			}
+
+
+
+			//获取表单设置内容
+			function GetContentBySetting(){
+				var json={};
+
+				json.tip=$('#FormItemTip').val();
+				json.title=$('[name="FieldTitle"]').val();
+				json.class=$('#FormItemClass').val();
+				json.id=$('#FormItemId').val();
+
+				switch(FormType){
+
+					case '1':
+						//输入框
+					break;
+					case '2':
+						//文本域
+					break;
+					case '3':
+						//编辑器
+					break;
+					case '4':
+						//下拉框
+						json.api=$('.url').val();
+						json.select=[];
+						$('.form-set-item').each(function(k,v){
+							json.select.push({
+								value:$(v).find('.value').val(),
+								text:$(v).find('.text').val()
+							})
+						})
+					break;
+					case '5':
+						//复选框
+						json.checkbox=[];
+						$('.form-set-item').each(function(k,v){
+							json.checkbox.push({
+								checked:$(v).find('.layui-form-switch').hasClass('layui-form-onswitch'),
+								text:$(v).find('.text').val(),
+								name:$(v).find('.name').val()
+							})
+						})
+					break;
+					case '6':
+						//单选框
+						json.radio=[];
+						$('.form-set-item').each(function(k,v){
+							json.radio.push({
+								checked:$(v).find('.layui-form-switch').hasClass('layui-form-onswitch'),
+								text:$(v).find('.text').val(),
+								value:$(v).find('.value').val()
+							})
+						})
+					break;
+					case '7':
+						//开关
+						json.switch={};
+						json.switch.text=$('.checkbox-group').find('.text').val();
+						json.switch.checked=$('.checkbox-group').find('.layui-form-switch').hasClass('layui-form-onswitch');
+					break;
+					case '8':
+						//密码框
+					break;
+					case '9':
+						//日期选择框
+					break;
+					case '10':
+						//文件上传
+						json.api=$('.url').val() || '';
+					break;
+					case '11':
+						//图片上传
+						json.api=$('.url').val() || '';
+					break;
+				}
+				return json;
+			}
+
+		  
+		  //监听提交
+		  form.on('submit(SetFieldSubmit)', function(data){
+
+		  	var data=data.field;
+		  	delete data.file;
+		  	//表单项配置
+		  	var FormItemConfig=GetContentBySetting();
+		  	data.FormConfig=JSON.stringify(FormItemConfig);
+		  	//模型id
+		  	data.model_id=model_id;
+		  	//模型名称
+		  	data.ModuleTableName=ModuleTableName;
+
+		  	$.ajax({
+		  		url:config['FieldManagement_API'],
+		  		type:'post',
+		  		dataType:'json',
+		  		data:data,
+		  		success:function(data){
+		  			top.layer.msg(data.errormsg);
+		  			if(data.errorcode==0){
+		  				location.reload();
+		  				return false;
+		  			}
+		  		},
+		  		error:function(err){
+		  			layer.msg(err.message || err.responseText);
+		  		}
+		  	})
+
+		    return false;
+		  });
+		 
+
+		});
+
+		
+  	</script>
+</body>
+<style>
+	html,body{
+		display: block;
+	}
+</style>
+	
+</html>

@@ -1,0 +1,470 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>栏目模型</title>
+	<link rel="stylesheet" href="/static/lib/layui/css/layui.css" />
+	<style>
+		/*reset*/
+		body,li,ul,h1,h2,h3,h4,h5,h6,p{
+			padding:0;
+			margin:0;
+			font-size:14px;
+		}
+		ul,li{
+			list-style:none;
+		}
+		a{
+			text-decoration: none;
+			color:#000;
+		}
+
+
+		/*导航*/
+		.nav{
+			padding: 15px 20px;
+		    box-shadow: 0 2px 4px rgba(0,0,0,.08);
+		    margin-bottom: 20px;
+		    position: fixed;
+		    z-index: 100;
+		    width: 100%;
+		    background: #fff;
+		}
+		.nav-ul{
+			overflow: hidden;
+		}
+		.nav-item{
+			float: left;
+			color:#606266;
+			font-size:15px;
+		}
+		.nav-link{
+			color:#303133;
+			font-weight: bold;
+		}
+
+		.main{
+			padding:80px 8px 0 8px;
+		}
+
+		#FieldManagementPanel{
+			display: none;
+			padding:15px 15px 0 15px;
+		}
+
+		body .ShowFieldManagementPanel #FieldManagementPanel{
+			display: block;
+		}
+		
+	</style>
+</head>
+<body class="FieldManagement">
+	
+	<div class="nav">
+		<ul class="nav-ul">
+			<li class="nav-item"><a href="/" class="nav-link">首页</a><i class="layui-icon layui-icon-right"></i></li>
+			<li class="nav-item">字段管理</li>
+		</ul>
+	</div>
+	
+	<div class="main">
+		
+		<div class="toolsbar">
+			<button type="button" class="layui-btn layui-btn-normal AddModule">添加字段</button>
+			<!-- <button type="button" class="layui-btn layui-btn-danger DelModule">删除字段</button> -->
+		</div>
+		<table class="layui-hide" id="FieldManagement" lay-filter="FieldManagementTable"></table>
+
+	</div>
+	
+	<!-- 添加、编辑面板 -->
+	<div id="FieldManagementPanel">
+		<div class="layui-form" action="" lay-filter="FieldManagementForm">
+			<div class="layui-form-item">
+	            <label class="layui-form-label">字段标题</label>
+	            <div class="layui-input-block">
+	                <input type="text" name="FieldTitle" required  lay-verify="required" placeholder="字段标题" autocomplete="off" class="layui-input">
+	            </div>
+	        </div>
+	        <div class="layui-form-item">
+	            <label class="layui-form-label">字段名称</label>
+	            <div class="layui-input-block">
+	                <input type="text" name="FieldName" required  lay-verify="required" placeholder="字段名称" autocomplete="off" class="layui-input">
+	            </div>
+	        </div>
+	        <div class="layui-form-item">
+	            <label class="layui-form-label">字段类型</label>
+	            <div class="layui-input-block">
+	                <select name="FieldType" lay-verify="required" id="FieldType">
+				        <option value="">请选择字段类型</option>
+				        <optgroup label="文本">
+				            <option value="VARCHAR">VARCHAR</option>
+				            <option value="CHAR">CHAR</option>
+				            <option value="TEXT">TEXT</option>
+				        </optgroup>
+				        <optgroup label="数字">
+				            <option value="INT">INT</option>
+				            <option value="SMALLINT">SMALLINT</option>
+				            <option value="MEDIUMIINT">MEDIUMIINT</option>
+				            <option value="DECIMAL">DECIMAL</option>
+				            <option value="MEDIUMIINT">FLOAT</option>
+				            <option value="DOUBLE">DOUBLE</option>
+				        </optgroup>
+				        <optgroup label="日期和时间">
+				            <option value="DATE">DATE</option>
+				            <option value="DATETIME">DATETIME</option>
+				        </optgroup>
+				    </select>
+	            </div>
+	        </div>
+	        <div class="layui-form-item">
+	            <label class="layui-form-label">字段长度</label>
+	            <div class="layui-input-block">
+	                <input type="text" name="FieldLength" placeholder="字段长度" autocomplete="off" class="layui-input">
+	            </div>
+	        </div>
+	        <div class="layui-form-item layui-form-text">
+	            <label class="layui-form-label">默认值</label>
+	            <div class="layui-input-block">
+	            <input type="text" name="DefaultValue" placeholder="默认值" autocomplete="off" class="layui-input">
+	            </div>
+	        </div>
+	        <div class="layui-form-item layui-form-text">
+	            <label class="layui-form-label">注释内容</label>
+	            <div class="layui-input-block">
+	            <input type="text" name="Comment" placeholder="字段注释内容" autocomplete="off" class="layui-input">
+	            </div>
+	        </div>
+	        <div class="layui-form-item">
+	            <label class="layui-form-label">表单类型</label>
+	            <div class="layui-input-block">
+	                <select name="FormType" lay-verify="required" id="FormType">
+	                	<option value="">请选择表单类型</option>
+	                	<option value="1">输入框</option>
+	                	<option value="2">文本域</option>
+	                	<option value="3">编辑器</option>
+	                	<option value="4">下拉框</option>
+	                </select>
+	            </div>
+	        </div>
+	        <div class="layui-form-item layui-form-text">
+	            <label class="layui-form-label">排序</label>
+	            <div class="layui-input-block">
+	            <input type="text" name="sort" placeholder="排序" autocomplete="off" class="layui-input">
+	            </div>
+	        </div>
+	        <div class="layui-form-item">
+	            <label class="layui-form-label">字段描述</label>
+	            <div class="layui-input-block">
+	                <textarea placeholder="请输入描述内容" class="layui-textarea" name="FieldRemark"></textarea>
+	            </div>
+	        </div>
+	        <div class="layui-form-item">
+	            <div class="layui-input-block">
+	            <button class="layui-btn layui-btn-normal" lay-submit lay-filter="FieldManagementSubmit">立即提交</button>
+	            <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+	            </div>
+	        </div>
+	        <input type="hidden" name="id" value="">
+	        <input type="hidden" name="model_id" value="">
+	        <input type="hidden" name="ModuleTableName" value="">
+	    </div>
+	</div>
+	 
+	<script type="text/html" id="FieldManagementBar">
+	  <a class="layui-btn layui-btn-xs" lay-event="edit">编辑</a>
+	  <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a>
+	</script>
+	
+	<script src="/static/js/config.js"></script>
+  	<script src="/static/lib/layui/layui.js"></script>
+  	<script>
+		
+		function getQueryParam(param){
+			var search=location.search.substring(1);
+			var searchArr=search.split('&');
+			for(var i=0,len=searchArr.length;i<len;i++){
+				var paramArr=searchArr[i].split('=');
+				if(paramArr[0]==param)return paramArr[1];
+			}
+			return false;
+		}
+
+		layui.use(['table','layer','jquery','form'], function(){
+			var table = layui.table,
+				layer=layui.layer,
+				$=layui.jquery,
+				form=layui.form;
+
+
+			var model_id=getQueryParam('model_id');
+			var ModuleTableName=getQueryParam('ModuleTableName');
+			if(!model_id){
+				layer.msg('当前缺少模型id，功能不可用');
+				return false;
+			}
+			if(!ModuleTableName){
+				layer.msg('当前缺少模型名称，功能不可用');
+				return false;
+			}
+			$('[name="model_id"]').val(model_id);
+			$('[name="ModuleTableName"]').val(ModuleTableName);
+
+
+			table.render({
+			elem: '#FieldManagement'
+			,id:'FieldManagementTable'
+			,url:config['GetFieldManagementList_API']
+			,where:{model_id:model_id}
+			,title: '字段管理'
+			,parseData:function(res){
+		    	return {
+			      "code": res.errorcode, //解析接口状态
+			      "msg": res.errormsg, //解析提示文本
+			      "data": res.data //解析数据列表
+			    };
+		    }
+			,cols: [[
+			  //{type: 'checkbox', fixed: 'left'}
+			  {field:'FieldTitle', title:'字段标题'}
+			  ,{field:'FieldName', title:'字段名称'}
+			  ,{field:'FieldType', title:'字段类型'}
+			  ,{field:'FieldLength', title:'字段长度'}
+			  ,{field:'FormType',title:'表单类型',templet:function(d){
+			  	var type=Number(d.FormType);
+			  	var text='';
+			  	switch(type){
+			  		case 1:
+			  			text='输入框';
+			  		break;
+			  		case 2:
+			  			text='文本域';
+			  		break;
+			  		case 3:
+			  			text='编辑器';
+			  		break;
+			  		case 4:
+			  			text='下拉框';
+			  		break;
+			  		case 5:
+			  			text='复选框';
+			  		break;
+			  		case 6:
+			  			text='单选框';
+			  		break;
+			  		case 7:
+			  			text='开关';
+			  		break;
+			  		case 8:
+			  			text='密码框';
+			  		break;
+			  		case 9:
+			  			text='日期选择框';
+			  		break;
+			  		case 10:
+			  			text='文件上传';
+			  		break;
+			  		case 11:
+			  			text='图片上传';
+			  		break;
+			  	}
+			  	return text;
+
+			  }}
+			  ,{field:'ShowInTableList',title:'是否列表显示',templet:function(d){
+			  	if(d.ShowInTableList==1){//显示
+		      		return '<input type="checkbox" name="ShowInTableList" value="'+d.id+'" lay-skin="switch" lay-text="显示|隐藏" lay-filter="ShowInTableList" checked="checked">';
+		      	}else{//隐藏
+		      		return '<input type="checkbox" name="ShowInTableList" value="'+d.id+'" lay-skin="switch" lay-text="显示|隐藏" lay-filter="ShowInTableList">';
+		      	}
+
+			  },width:120}
+			  ,{field:'sort',title:'排序',edit:'text',width:60}
+			  ,{field:'FieldComment',title:'字段描述'}
+			  ,{field:'', title:'操作', width:150,toolbar:'#FieldManagementBar'}
+			]]
+			,page: false
+			});
+
+
+			// 监听单个开关事件
+		  	form.on('switch(ShowInTableList)',function(data){
+
+		  		var value=data.elem.checked?1:0; //显示：1  隐藏：0
+		  		$.ajax({
+					url:config['EditField_API'],
+					data:{id:data.value,ShowInTableList:value},
+					type:'post',
+					dataType:'json',
+					success:function(res){
+						if(res.errorcode!=0){
+							layer.msg(res.errormsg);
+						}
+					}
+				})
+
+		  	})
+
+		  	//监听单元格编辑事件
+			table.on('edit(FieldManagementTable)', function(obj){ //注：edit是固定事件名，test是table原始容器的属性 lay-filter="对应的值"
+				$.ajax({
+					url:config['EditField_API'],
+					data:{id:obj.data.id,'sort':obj.value},
+					type:'post',
+					dataType:'json',
+					success:function(res){
+						if(res.errorcode!=0){
+							layer.msg(res.errormsg);
+							return false;
+						}
+						table.reload('FieldManagementTable',{
+							url:config['GetFieldManagementList_API']
+							,where:{model_id:model_id}
+						})
+					}
+				})
+			});
+
+			$('.AddModule').click(function(){
+				location.href="./SetField.html?model_id="+model_id+"&ModuleTableName="+ModuleTableName;
+				// init()
+				// layer.open({
+			 //  		title:'添加字段',
+				// 	type: 1,
+				// 	area:['600px'],
+				// 	skin:'ShowFieldManagementPanel',
+				// 	content: $('#FieldManagementPanel')
+				// });
+			})
+
+			/*$('.DelModule').click(function(){
+
+				layer.confirm('删除将不可恢复，您确定删除吗？', function(index){
+
+		  			//获取选中的数据
+				  	var checkStatus = table.checkStatus('FieldManagementTable');
+				  	var CheckedData=checkStatus.data;
+				  	var str='';
+
+				  	//拼接删除的id字符串
+				  	for(var i=0,len=CheckedData.length;i<len;i++){
+				  		str+=','+CheckedData[i].id;
+				  	}
+				  	str=str.substring(1);
+
+				  	//发起删除请求
+			  		$.ajax({
+						url:config['DeleteFieldManagement_API'],
+						data:{id:str},
+						type:'post',
+						dataType:'json',
+						success:function(res){
+							layer.msg(res.errormsg);
+							if(res.errorcode==0){
+								table.reload('FieldManagementTable',{
+									url:config['GetFieldManagementList_API']
+								})
+							}
+						}
+					})
+
+				});
+
+			})*/
+
+			//添加/更新栏目模型
+			form.on('submit(FieldManagementSubmit)',function(data){
+
+				var initName=$('[name="FieldName"]').attr('data-initName');
+				if(initName){
+					data.field.initName=initName;
+				}
+
+				$.ajax({
+					url:config['FieldManagement_API'],
+					data:data.field,
+					type:'post',
+					dataType:'json',
+					success:function(res){
+						top.layer.msg(res.errormsg);
+						if(res.errorcode==0){
+							location.reload();
+						}
+					}
+				})
+
+			  	return false;
+			  })
+
+			//监听行工具事件
+			table.on('tool(FieldManagementTable)', function(obj){
+				var data = obj.data;
+
+				if(obj.event === 'del'){
+
+				  layer.confirm('您确定删除此字段<span style="color:red;font-weight:bold;">(相关数据将被删除)</span>吗？', function(index){
+				    $.ajax({
+						url:config['DeleteFieldManagement_API'],
+						data:{id:data.id,ModuleTableName:ModuleTableName,FieldName:data.FieldName},
+						dataType:'json',
+						success:function(res){
+							layer.msg(res.errormsg);
+							if(res.errorcode==0){
+								table.reload('FieldManagementTable',{
+									url:config['GetFieldManagementList_API']
+								})
+			        			layer.close(index);
+							}
+						}
+					})
+				  });
+
+				} else if(obj.event === 'edit'){
+					location.href="./SetField.html?model_id="+model_id+"&ModuleTableName="+ModuleTableName+"&id="+data.id;
+					// init()
+
+					// $.ajax({
+					// 	url:config['GetFieldManagementById_API'],
+					// 	data:{id:data.id},
+					// 	dataType:'json',
+					// 	success:function(res){
+					// 		var res=res.data;
+					// 		$('[name="FieldName"]').attr('data-initName',res.FieldName);
+					// 		form.val('FieldManagementForm',res);
+					// 	}
+					// })
+
+				 //  	layer.open({
+				 //  		title:'编辑模型',
+					// 	type: 1,
+					// 	area:['600px'],
+					// 	skin:'ShowFieldManagementPanel',
+					// 	content: $('#FieldManagementPanel')
+					// });
+
+				}
+			});
+
+
+
+			function init(){
+				$('[name="FieldName"]').removeAttr('data-initName');//此属性是用于比较原来的字段名称，如果不一样，修改字段
+			  	form.val('FieldManagementForm',{
+			  		FieldName:'',
+			  		FieldType:'',
+			  		FieldLength:'',
+			  		DefaultValue:'',
+			  		FormType:'',
+			  		FieldRemark:'',
+			  		Comment:'',
+			  		sort:'',
+			  		model_id:''
+			  	})
+
+			}
+
+
+		});
+  	</script>
+</body>
+</html>

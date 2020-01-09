@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>网站信息</title>
+	<link rel="stylesheet" href="/static/lib/layui/css/layui.css">
+	<style>
+	/*reset*/
+	body,li,ul,h1,h2,h3,h4,h5,h6,p{
+		padding:0;
+		margin:0;
+		font-size:14px;
+	}
+	ul,li{
+		list-style:none;
+	}
+	a{
+		text-decoration: none;
+		color:#000;
+	}
+
+	/*导航*/
+	.nav{
+		padding: 15px 20px;
+	    box-shadow: 0 2px 4px rgba(0,0,0,.08);
+	    margin-bottom: 20px;
+	    position: fixed;
+	    z-index: 100;
+	    width: 100%;
+	    background: #fff;
+	}
+	.nav-ul{
+		overflow: hidden;
+	}
+	.nav-item{
+		float: left;
+		color:#606266;
+		font-size:15px;
+	}
+	.nav-link{
+		color:#303133;
+		font-weight: bold;
+	}
+
+
+	.main{
+		padding:60px 8px 0 8px;
+	}
+
+	.maxwidth{
+		max-width:300px;
+	}
+	.layui-form{
+		border:1px solid #eee;
+		border-bottom: none;
+	}
+	#UploadWatermark{
+		vertical-align: top;
+		border-radius:3px;
+	}
+	.watermarkImg{
+		height:38px;
+	}
+
+	.layui-form-label{
+		width:120px;
+	}
+	.layui-input-block{
+		margin-left:150px;
+	}
+	.layui-form-item{
+		border-bottom: 1px solid #eee;
+		padding:15px 0;
+	}
+	.watermarkText{
+		display: none;
+	}
+	</style>
+</head>
+<body class="Watermark">
+
+	<!-- 导航 -->
+	<div class="nav">
+		<ul class="nav-ul">
+			<li class="nav-item"><a href="/" class="nav-link">首页</a><i class="layui-icon layui-icon-right"></i></li>
+			<li class="nav-item">邮箱配置</li>
+		</ul>
+	</div>
+
+	<div class="main">
+
+		<div class="layui-form" action="" lay-filter="EmailSetting">
+		
+			<div class="layui-form-item">
+			    <label class="layui-form-label">发件人</label>
+			    <div class="layui-input-block">
+			      <input type="text" name="Sender" autocomplete="off" placeholder="发件人" class="layui-input maxwidth" value="">
+			    </div>
+			</div>
+			
+			<div class="layui-form-item">
+			    <label class="layui-form-label">发件箱账号</label>
+			    <div class="layui-input-block">
+			      <input type="text" name="SenderEmailAccount" autocomplete="off" placeholder="发件箱账号" class="layui-input maxwidth" value="">
+			    </div>
+			</div>
+			
+			<div class="layui-form-item">
+			    <label class="layui-form-label">发件箱密码</label>
+			    <div class="layui-input-block">
+			      <input type="text" name="SenderEmailPassword" autocomplete="off" placeholder="发件箱密码" class="layui-input maxwidth" value="">
+			    </div>
+			</div>
+			
+			<div class="layui-form-item">
+			    <label class="layui-form-label">SMTP服务器地址</label>
+			    <div class="layui-input-block">
+			      <input type="text" name="SMTPServerAddress" autocomplete="off" placeholder="SMTP服务器地址" class="layui-input maxwidth" value="">
+			    </div>
+			</div>
+
+			<div class="layui-form-item">
+			    <label class="layui-form-label">端口</label>
+			    <div class="layui-input-block">
+			      <input type="text" name="ServerPort" autocomplete="off" placeholder="端口" class="layui-input maxwidth" value="25">
+			    </div>
+			</div>
+			
+			<div class="layui-form-item">
+			    <label class="layui-form-label">发送方式</label>
+			    <div class="layui-input-block">
+			      	<input type="radio" name="SendMode" value="ssl" title="SSL服务方式"></br>
+	     			<input type="radio" name="SendMode" value="tls" checked="" title="TLS服务方式">
+			    </div>
+			</div>
+
+			<div class="layui-form-item">
+			    <label class="layui-form-label">测试</label>
+			    <div class="layui-input-block">
+			      	<button type="submit" class="layui-btn layui-btn-primary">发送测试</button>
+			    </div>
+			</div>
+			
+			<div class="layui-form-item">
+			    <div class="layui-input-block">
+			      <button type="submit" class="layui-btn layui-btn-normal" lay-submit="" lay-filter="EmailSetting">保存</button>
+			    </div>
+			</div>
+
+		</div>
+		  
+	</div>
+
+	<script src="/static/js/config.js"></script>
+	<script src="/static/lib/layui/layui.js"></script>
+  	<script>
+  		layui.use(['form','jquery'], function(){
+
+			var form = layui.form,
+				$=layui.jquery;
+
+			$.ajax({
+				url:config['GetConfig_API'],
+				data:{type:'email'},
+				dataType:'json',
+				success:function(data){
+					form.val('EmailSetting',JSON.parse(data.data));
+				}
+			})
+
+			//监听提交
+			form.on('submit(EmailSetting)', function(data){
+
+				data.field.type='email';
+				$.ajax({
+					url:config['UpdateConfig_API'],
+					data:data.field,
+					type:'post',
+					dataType:'json',
+					success:function(res){
+						top.layer.msg(res.errormsg);
+						if(res.errorcode==0){
+							location.reload();
+						}
+					}
+				})
+				return false;
+
+			});
+
+		});
+  	</script>
+</body>
+</html>

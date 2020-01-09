@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>网站信息</title>
+	<link rel="stylesheet" href="/static/lib/layui/css/layui.css">
+	<style>
+	/*reset*/
+	body,li,ul,h1,h2,h3,h4,h5,h6,p{
+		padding:0;
+		margin:0;
+		font-size:14px;
+	}
+	ul,li{
+		list-style:none;
+	}
+	a{
+		text-decoration: none;
+		color:#000;
+	}
+
+	/*导航*/
+	.nav{
+		padding: 15px 20px;
+	    box-shadow: 0 2px 4px rgba(0,0,0,.08);
+	    margin-bottom: 20px;
+	    position: fixed;
+	    z-index: 100;
+	    width: 100%;
+	    background: #fff;
+	}
+	.nav-ul{
+		overflow: hidden;
+	}
+	.nav-item{
+		float: left;
+		color:#606266;
+		font-size:15px;
+	}
+	.nav-link{
+		color:#303133;
+		font-weight: bold;
+	}
+
+
+	.main{
+		padding:50px 8px 0 8px;
+	}
+	.header{
+		padding:20px 0 0 0;
+	}
+	#CategoryPanel{
+		display: none;
+	}
+	body .ShowPanel #CategoryPanel{
+		padding:15px;
+		display: block;
+	}
+	.layui-form-selected dl{
+		max-height: 250px;
+	}
+	</style>
+</head>
+<body class="websiteInfo">
+
+	<!-- 导航 -->
+	<div class="nav">
+		<ul class="nav-ul">
+			<li class="nav-item"><a href="/" class="nav-link">首页</a><i class="layui-icon layui-icon-right"></i></li>
+			<li class="nav-item">文章列表</li>
+		</ul>
+	</div>
+
+	<div class="main">
+
+		<div class="header">
+			<button type="button" class="layui-btn layui-btn-normal AddArticle">添加内容</button>
+			<button type="button" class="layui-btn layui-btn-danger DeleteArticle">删除内容</button>
+		</div>
+		<table class="layui-hide" id="ArticleTable" lay-filter="ArticleTable"></table>
+
+	</div>
+	
+	<div id="CategoryPanel">
+		<form class="layui-form" action="" lay-filter="CategoryForm">
+			<div class="layui-form-item">
+				<select name="category_id" lay-verify="required" id="category"></select>
+			</div>
+		</form>
+	</div>
+
+	<script type="text/html" id="barDemo">
+	  <a class="layui-btn layui-btn-xs" lay-event="edit">编辑</a>
+	  <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a>
+	</script>
+	<script src="/static/js/config.js"></script>
+	<script src="/static/js/jquery.min.js"></script>
+	<script>
+		var option='<option value=""></option>';
+	  	function createOption(arr,level=1){
+	  		if(!arr || !arr.length)return false;
+	  		for(var i=0,len=arr.length;i<len;i++){
+	  			var str=createStr(level);
+	  			option+='<option value='+arr[i].id+'|'+arr[i].model_id+'>'+str+arr[i].cname+'</option>';
+	  			if(arr[i].children && arr[i].children.length>=1){
+	  				createOption(arr[i].children,level+1);
+	  			}
+	  		}
+	  		return option;
+	  	}
+
+	  	function createStr(num,str='--'){
+	  		var arr=new Array(num);
+	  		return arr.join(str);
+	  	}
+
+
+	  	function getQueryParam(param){
+			var search=location.search.substring(1);
+			var searchArr=search.split('&');
+			for(var i=0,len=searchArr.length;i<len;i++){
+				var paramArr=searchArr[i].split('=');
+				if(paramArr[0]==param)return paramArr[1];
+			}
+			return false;
+		}
+		var mid=getQueryParam('mid');
+		$.ajax({
+			url:config['GetColumn_API'],
+			data:{mid:mid},
+			async:false,//同步
+			success:function(data){
+				var optionstr=createOption(data);
+				$('#category').html(optionstr);
+			}
+		})
+	</script>
+	<script src="/static/lib/layui/layui.js"></script>
+	<script>
+	
+
+	//获取模型id、栏目id
+	function getQueryParam(param){
+		var search=location.search.substring(1);
+		var searchArr=search.split('&');
+		for(var i=0,len=searchArr.length;i<len;i++){
+			var paramArr=searchArr[i].split('=');
+			if(paramArr[0]==param)return paramArr[1];
+		}
+		return false;
+	}
+	var cid=getQueryParam('cid');
+	var mid=getQueryParam('mid');
+
+
+
+	//1、根据模型id获取字段信息
+	var cols=[[]];
+	$.ajax({
+		url:config['GetFieldInfoByMid_API'],
+		data:{mid:mid},
+		async:false,
+		dataType:'json',
+		success:function(res){
+
+  			if(res['errorcode']==0){
+    			cols[0].push({type: 'checkbox', fixed: 'left'});
+    			var data=res.data;
+    			for(var i=0,len=data.length;i<len;i++){
+    				cols[0].push({
+    					field:data[i]['FieldName'],
+    					title:data[i]['FieldTitle']
+    				})
+    			}
+    			cols[0].push({
+    				title:'操作',
+    				fixed: 'right',
+    				toolbar: '#barDemo',
+    				width:150
+    			})
+  			}else{
+  				top.layer.msg(res.errormsg);
+  			}
+
+			
+		},
+  		error:function(err){
+  			layer.msg(err.message);
+  		}
+	})
+
+  	layui.use(['table','jquery','layer','form'], function(){
+	  var table = layui.table,
+	  	  $=layui.jquery,
+	  	  layer=layui.layer,
+	  	  form=layui.form;
+	  
+	  table.render({
+	    elem: '#ArticleTable'
+	    ,id:'ArticleTable'
+	    ,url:config['GetArticle_API']
+	    ,where:{cid:cid,mid:mid}
+	    ,title: '内容列表'
+	    ,cols: cols
+	    ,page: true
+	  });
+	  
+
+	  //添加内容
+	  $('.AddArticle').click(function(){
+
+		layer.open({
+	  		title:'选择栏目',
+			type: 1,
+			area:['500px','450px'],
+			skin:'ShowPanel',
+			btn:['确定','取消'],
+			content: $('#CategoryPanel'),
+			yes:function(index,dom){
+				var formdata=form.val('CategoryForm');
+				if(!formdata.category_id){
+					layer.msg('请先选择栏目');
+					return false;
+				}
+				var arr=formdata.category_id.split('|');
+				location.href='AddContent.html?cid='+arr[0]+'&model_id='+arr[1];
+			},
+			btn2:function(index){
+				layer.close(index);
+			}
+		});
+
+		return false;
+
+	  })
+
+	  //删除内容事件
+	  $('.DeleteArticle').click(function(){
+	  	var checkStatus=table.checkStatus('ArticleTable');
+	  	var data=checkStatus.data;
+	  	var str='';
+
+	  	for(var i=0,len=data.length;i<len;i++){
+	  		str+=','+data[i].id;
+	  	}
+	  	str=str.substring(1);
+	  	
+	  	if(!str){
+	  		layer.msg('请选择要删除的文章');
+	  		return false;
+	  	}
+
+	  	$.ajax({
+      		url:config['DeleteArticle_API'],
+      		data:{aid:str,mid:mid},
+      		success:function(res){
+      			top.layer.msg(res.errormsg);
+      			if(res['errorcode']==0){
+        			location.reload();
+      			}
+      		},
+      		error:function(err){
+      			layer.msg(err.message);
+      		}
+      	})
+
+	  })
+
+	  
+	  //监听行工具事件
+	  table.on('tool(ArticleTable)', function(obj){
+
+	    var data = obj.data;
+	    if(obj.event === 'del'){
+	      layer.confirm('真的删除行么', function(index){
+	      	$.ajax({
+	      		url:config['DeleteArticle_API'],
+	      		data:{aid:data.id,mid:mid},
+	      		success:function(res){
+	      			layer.msg(res.errormsg);
+	      			if(res['errorcode']==0){
+	      				obj.del();
+	        			layer.close(index);
+	      			}
+	      		},
+	      		error:function(err){
+	      			layer.msg(err.message);
+	      		}
+	      	})
+	        
+	      });
+	    } else if(obj.event === 'edit'){
+			location.href='AddContent.html?aid='+data.id+'&cid='+data.cid+'&model_id='+mid;
+	    }
+	  });
+	});
+	</script>
+</body>
+</html>

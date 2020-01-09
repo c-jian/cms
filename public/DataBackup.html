@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>网站信息</title>
+	<link rel="stylesheet" href="/static/lib/layui/css/layui.css">
+	<style>
+	/*reset*/
+	body,li,ul,h1,h2,h3,h4,h5,h6,p{
+		padding:0;
+		margin:0;
+		font-size:14px;
+	}
+	ul,li{
+		list-style:none;
+	}
+	a{
+		text-decoration: none;
+		color:#000;
+	}
+
+	/*导航*/
+	.nav{
+		padding: 15px 20px;
+	    box-shadow: 0 2px 4px rgba(0,0,0,.08);
+	    margin-bottom: 20px;
+	    position: fixed;
+	    z-index: 100;
+	    width: 100%;
+	    background: #fff;
+	}
+	.nav-ul{
+		overflow: hidden;
+	}
+	.nav-item{
+		float: left;
+		color:#606266;
+		font-size:15px;
+	}
+	.nav-link{
+		color:#303133;
+		font-weight: bold;
+	}
+
+
+	.main{
+		padding:50px 8px 0 8px;
+	}
+	.header{
+		padding:20px 0 0 0;
+	}
+
+	</style>
+</head>
+<body class="websiteInfo">
+
+	<!-- 导航 -->
+	<div class="nav">
+		<ul class="nav-ul">
+			<li class="nav-item"><a href="/" class="nav-link">首页</a><i class="layui-icon layui-icon-right"></i></li>
+			<li class="nav-item">数据备份</li>
+		</ul>
+	</div>
+
+	<div class="main">
+
+		<div class="header">
+			<button type="button" class="layui-btn layui-btn-normal">添加备份</button>
+			<button type="button" class="layui-btn layui-btn-danger">删除备份</button>
+		</div>
+		<table class="layui-hide" id="test" lay-filter="test"></table>
+
+	</div>
+	
+	<script type="text/html" id="barDemo">
+	  <a class="layui-btn layui-btn-xs" lay-event="edit">编辑</a>
+	  <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a>
+	</script>
+	<script src="/static/js/jquery.min.js"></script>
+	<script src="/static/lib/layui/layui.js"></script>
+	<script>
+  	layui.use('table', function(){
+	  var table = layui.table;
+	  
+	  table.render({
+	    elem: '#test'
+	    ,id:'DataBackup'
+	    ,url:'/test/table/demo1.json'
+	    ,title: '文章列表'
+	    ,cols: [[
+	      {type: 'checkbox', fixed: 'left'}
+	      ,{field:'username', title:'数据名称'}
+	      ,{field:'username', title:'备份名称'}
+	      ,{field:'sex', title:'备份时间'}
+	      ,{field:'sex', title:'备份模式'}
+	      ,{field:'city', title:'文件大小'}
+	      ,{field:'city', title:'备份说明'}
+	      ,{fixed: 'right', title:'操作', toolbar: '#barDemo', width:150}
+	    ]]
+	    ,page: true
+	  });
+	  
+
+	  var checkStatus=table.checkStatus('DataBackup');
+	  var data = checkStatus.data;
+
+	  
+	  //监听行工具事件
+	  table.on('tool(test)', function(obj){
+	    var data = obj.data;
+	    //console.log(obj)
+	    if(obj.event === 'del'){
+	      layer.confirm('真的删除行么', function(index){
+	        obj.del();
+	        layer.close(index);
+	      });
+	    } else if(obj.event === 'edit'){
+	      layer.prompt({
+	        formType: 2
+	        ,value: data.email
+	      }, function(value, index){
+	        obj.update({
+	          email: value
+	        });
+	        layer.close(index);
+	      });
+	    }
+	  });
+	});
+	</script>
+</body>
+</html>

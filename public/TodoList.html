@@ -1,0 +1,708 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>网站信息</title>
+	<link rel="stylesheet" href="/static/lib/layui/css/layui.css">
+	<style>
+	/*reset*/
+	body,li,ul,h1,h2,h3,h4,h5,h6,p{
+		padding:0;
+		margin:0;
+		font-size:14px;
+	}
+	ul,li{
+		list-style:none;
+	}
+	a{
+		text-decoration: none;
+		color:#000;
+	}
+
+	/*导航*/
+	.nav{
+		padding: 15px 20px;
+	    box-shadow: 0 2px 4px rgba(0,0,0,.08);
+	    margin-bottom: 20px;
+	    position: fixed;
+	    z-index: 1000;
+	    width: 100%;
+	    background: #fff;
+	}
+	.nav-ul{
+		overflow: hidden;
+	}
+	.nav-item{
+		float: left;
+		color:#606266;
+		width:30px;
+		margin-right: 15px;
+	}
+	.nav-link{
+		color:#303133;
+		font-weight: bold;
+	}
+
+
+	.main{
+		padding:80px 8px 0 8px;
+		display: table;
+	}
+	
+
+	/*待办事项*/
+	.list-box-item{
+		display: table-cell;
+		min-width:380px;
+		padding:10px;
+		box-shadow:2px 2px 5px rgba(0,0,0,.2);
+	}
+	.tablerow{
+		display: table-row;
+	}
+	.list-title{
+		height:40px;
+		line-height:40px;
+		background: rgb(252,235,228);
+		color:#bf4817;
+		border-radius:3px;
+		padding-left:10px;
+		position: relative;
+	}
+	.list-title .addItem{
+		position: absolute;
+		cursor: pointer;
+		font-size:16px;
+		right:15px;
+		top:0;
+	}
+	.list-item{
+		padding:10px 10px 10px 35px;
+		border-bottom:1px solid #eee;
+		position: relative;
+	}
+	.list-item .checkbox-finish{
+		position: absolute;
+		width:30px;
+		top:50%;
+		bottom:0;
+		left:10px;
+		margin-top:-10px;
+		cursor: pointer;
+	}
+	.list-item .checkbox-finish .circle{
+		position: absolute;
+		font-size:18px;
+		left:0;
+		color:#bf4817;
+	}
+	.list-item .checkbox-finish .ok{
+		position: absolute;
+		left:1px;
+		top:2px;
+		font-size:16px;
+		color:#bf4817;
+		display: none;
+	}
+	.list-title .checkbox-delete{
+		position: absolute;
+		left:0;
+		right:0;
+		top:0;
+		bottom:0;
+		display: none;
+		cursor: pointer;
+	}
+	.list-title .checkbox-delete .circle{
+		position: absolute;
+		font-size:18px;
+		right:15px;
+		color:#bf4817;
+	}
+	.list-title .checkbox-delete .ok{
+		position: absolute;
+		right:15px;
+		top:1px;
+		font-size:16px;
+		color:#bf4817;
+		display: none;
+	}
+
+	.list-item .item-time{
+		position: absolute;
+		right:10px;
+		color:#999;
+		top: 50%;
+    	margin-top: -9px;
+	}
+	.list-item .operation{
+		position: absolute;
+		right:10px;
+		top:50%;
+		margin-top:-12px;
+		display: none;
+	}
+	.list-item:hover .operation{
+		display: block;
+	}
+	.list-item:hover .item-time{
+		display: none;
+	}
+	.list-item .item-title{
+		color:#333;
+		display: inline-block;
+		max-width:250px;
+		overflow:hidden;
+		text-overflow:ellipsis;
+		white-space: nowrap;
+		cursor: default;
+	}
+	.list-item .operation i{
+		margin-left:5px;
+		cursor: pointer;
+		font-size:20px;
+		color:#bf4817;
+	}
+	.maxh-con{
+		overflow: auto;
+	}
+	.addproject{
+		display: inline-block;
+		width:30px;
+		height:30px;
+		background: #1E9FFF;
+		border-radius: 30px;
+		text-align: center;
+		line-height:30px;
+		color:#fff;
+		vertical-align: top;
+		cursor: pointer;
+	}
+	.addproject i{
+		font-size:20px;
+	}
+	.delete-section{
+		font-size:30px;
+		color:#1E9FFF;
+		vertical-align: top;
+		cursor: pointer;
+	}
+	.nav-ul{
+		float: right;
+		margin-right:36px;
+	}
+
+	#TodoListPanel,#AddProjectPanel{
+		display: none;
+		padding:10px 0;
+	}
+	#TodoListPanel .layui-input-block{
+		overflow:hidden;
+	}
+	#TodoListPanel .plus{
+		display: block;
+		width:20px;
+		height:20px;
+		background: #1E9FFF;
+		border-radius: 15px;
+		text-align: center;
+		line-height: 20px;
+		color:#fff;
+		cursor: pointer;
+		margin-top:8px;
+	}
+	body .ShowTodoListPanel #TodoListPanel{
+		display: block;
+	}
+	body .ShowAddProjectPanel #AddProjectPanel{
+		display: block;
+	}
+	body .ShowAddProjectPanel .layui-form-label{
+		width: 30px;
+	}
+	body .ShowAddProjectPanel .layui-input-block{
+		margin-left:62px;
+	}
+	</style>
+</head>
+<body>
+
+	<!-- 导航 -->
+	<div class="nav">
+		<ul class="nav-ul">
+			<li class="nav-item"><span class="addproject"><i class="layui-icon layui-icon-add-1"></i></span></li>
+			<li class="nav-item"><i class="layui-icon layui-icon-delete delete-section" title="点我删除"></i></li>
+		</ul>
+	</div>
+
+	<div class="main">
+		
+		<!-- <div class="tablerow">
+
+			<div class="list-box-item">
+
+				<div class="list-title">
+					今天内容
+					<i class="layui-icon layui-icon-add-1 addItem"></i>
+					<span class="checkbox-delete">
+						<i class="layui-icon layui-icon-circle circle"></i>
+						<i class="layui-icon layui-icon-ok ok"></i>
+					</span>
+				</div>
+				<div class="maxh-con">
+					<ul class="list-item-ul">
+						<li class="list-item">
+							<span class="checkbox-finish">
+								<i class="layui-icon layui-icon-circle circle"></i>
+								<i class="layui-icon layui-icon-ok ok"></i>
+							</span>
+							<span class="item-title">集中器角色集中器角色集中器角色集中器角色集中器角色集中器角色集中器角色</span>
+							<span class="item-time">12-31 16:35</span>
+							<span class="operation">
+								<i class="layui-icon layui-icon-edit"></i>
+								<i class="layui-icon layui-icon-delete"></i>
+							</span>
+						</li>
+					</ul>
+				</div>
+
+			</div> list-box-item
+			
+		</div> tablerow -->
+
+
+	</div><!-- main -->
+
+	
+	<!-- 编辑/添加面板 -->
+	<div id="TodoListPanel">
+		<div class="layui-form" action="" lay-filter="TodoListForm">
+	        <div class="layui-form-item">
+	            <label class="layui-form-label">标题</label>
+	            <div class="layui-input-inline">
+	                <input type="text" name="title" required  lay-verify="required" placeholder="标题" autocomplete="off" class="layui-input">
+	            </div>
+	        </div>
+	        <div class="layui-form-item">
+	            <label class="layui-form-label">重要性</label>
+	            <div class="layui-input-inline">
+	                <select name="importance" lay-verify="required">
+	                	<option value="1">重要紧急</option>
+	                	<option value="2">重要不紧急</option>
+	                	<option value="3">不重要紧急</option>
+	                	<option value="4">不重要不紧急</option>
+	                </select>
+	            </div>
+	        </div>
+	         <div class="layui-form-item">
+	            <label class="layui-form-label">详细内容</label>
+	            <div class="layui-input-block">
+	            	<textarea class="layui-textarea layui-hide" name="content" lay-verify="content" id="LAY_demo_editor"></textarea>
+	            </div>
+	        </div>
+	        <div class="layui-form-item">
+	            <div class="layui-input-block">
+	            <button class="layui-btn layui-btn-normal" lay-submit lay-filter="TodoListSubmit">立即提交</button>
+	            <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+	            </div>
+	        </div>
+	        <input type="hidden" name="id" value="">
+	        <input type="hidden" name="todo_list_category_id" value="">
+	    </div>
+	</div>
+
+	<!-- 添加项目 -->
+	<div id="AddProjectPanel">
+		<div class="layui-form" action="" lay-filter="FriendLinkForm">
+	        <div class="layui-form-item">
+	            <label class="layui-form-label">标题</label>
+	            <div class="layui-input-inline">
+	                <input type="text" name="title" required  lay-verify="required" placeholder="标题" autocomplete="off" class="layui-input">
+	            </div>
+	        </div>
+	        <div class="layui-form-item">
+	            <div class="layui-input-block">
+	            <button class="layui-btn layui-btn-normal" lay-submit lay-filter="AddProjectSubmit">立即提交</button>
+	            <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+	            </div>
+	        </div>
+	        <input type="hidden" name="id" value="">
+	    </div>
+	</div>
+
+	<script src="/static/js/jquery.min.js"></script>
+	<script src="/static/js/config.js"></script>
+
+	<script>
+		function getURLParam(param){
+			var search=location.search.substring(1);
+			if(search){
+				var searchArr=search.split('&');
+				for(var i=0,len=searchArr.length;i<len;i++){
+					var paramArr=searchArr[i].split('=');
+					if(paramArr[0]==param)return paramArr[1];
+				}
+			}
+			return false;
+		}
+		
+	</script>
+	<script src="/static/lib/layui/layui.js"></script>
+  	<script>
+
+  		layui.use(['form', 'layedit','upload','element'], function(){
+		  var form = layui.form
+		  ,layer = layui.layer
+		  ,layedit = layui.layedit
+		  upload=layui.upload,
+		  element=layui.element,
+		   	
+		  	//添加待办事项分类
+		  	$('.addproject').click(function(){
+
+		  		layer.open({
+			  		title:'添加分类',
+					type: 1,
+					skin:'ShowAddProjectPanel',
+					content: $('#AddProjectPanel')
+				});
+
+		  	})
+
+		  	//删除待办事项分类
+		  	$('.delete-section').click(function(){
+
+		  		if(!this.delete){//删除
+
+		  			//删除按钮图标变成 勾
+		  			this.className='layui-icon layui-icon-ok delete-section';
+		  			$(this).attr('title','点我完成');//提示完成
+
+			  		$('.checkbox-delete').each(function(k,v){
+
+			  			//找到父级list-box-item
+			  			var item=$(v).parents('.list-box-item');
+			  			$(v).show();//显示删除按钮
+			  			$('.addItem').hide();//隐藏添加按钮
+			  			//给删除按钮绑定点击事件
+			  			$(v).click(function(){
+			  				$(this).find('.ok').show();//点击显示勾选
+			  				var id=$(this).attr('data-id');//待办事项分类id
+			  				$.ajax({
+						  		url:config['DeleteTodoListCategory_API'],
+						  		type:'post',
+						  		dataType:'json',
+						  		data:{id:id},
+						  		success:function(data){
+
+						  			//成功，先动画，后删除元素
+						  			if(data.errorcode==0){
+						  				item.animate({
+						  					minWidth:0,
+						  					opacity:0
+						  				},function(){
+						  					item.remove()
+						  				});
+						  			}else{
+						  				top.layer.msg(data.errormsg);
+						  				item.find('.ok').hide();
+						  			}
+
+						  		},
+						  		error:function(err){
+						  			item.find('.ok').hide();
+						  			layer.msg(err.message || err.responseText);
+						  		}
+						  	})
+
+			  			})
+			  		})
+
+			  		this.delete=true;
+
+		  		}else{//取消删除
+		  			this.delete=false;
+
+		  			//由 勾 变成 删除 图标
+		  			this.className='layui-icon layui-icon-delete delete-section';
+		  			$(this).attr('title','点我删除')//提示删除
+
+		  			//隐藏待办事项分类的删除按钮
+		  			$('.checkbox-delete').hide();
+		  			$('.checkbox-delete').find('.ok').hide();
+
+		  			//显示添加按钮
+		  			$('.addItem').show();
+
+		  		}
+
+
+		  	})
+		  	
+
+		  	var index=layedit.build('LAY_demo_editor',{
+		  		width:300,
+		  		height:150
+		  	});
+
+
+		//初始化内容
+	  	$.ajax({
+	  		url:config['GetTodoListCategory_API'],
+	  		dataType:'json',
+	  		success:function(data){
+
+	  			if(!data && data.length)return false;
+
+	  			var tpl='';
+	  			for(var i=0,len=data.length;i<len;i++){
+	  				tpl+='<div class="list-box-item">'+
+							'<div class="list-title" data-id="'+data[i].id+'">'+data[i].title+
+								'<i class="layui-icon layui-icon-add-1 addItem"></i>'+
+								'<span class="checkbox-delete" data-id="'+data[i].id+'">'+
+									'<i class="layui-icon layui-icon-circle circle"></i>'+
+									'<i class="layui-icon layui-icon-ok ok"></i>'+
+								'</span>'+
+							'</div>'+
+							'<div class="maxh-con">'+
+								'<ul class="list-item-ul">';
+									var todolist=data[i].todolist;
+									for(var j=0;j<todolist.length;j++){
+
+										tpl+='<li class="list-item" data-id="'+todolist[j].id+'">'+
+											'<span class="checkbox-finish">'+
+												'<i class="layui-icon layui-icon-circle circle"></i>'+
+												'<i class="layui-icon layui-icon-ok ok"></i>'+
+											'</span>'+
+											'<span class="item-title">'+todolist[j].title+'</span>'+
+											'<span class="item-time">12-31 16:35</span>'+
+											'<span class="operation">'+
+												'<i class="layui-icon layui-icon-edit"></i>'+
+												'<i class="layui-icon layui-icon-delete"></i>'+
+											'</span>'+
+										'</li>';
+									}
+
+
+								tpl+='</ul>'+
+							'</div>'+
+						'</div>';
+	  			}
+
+	  			$('.main').html(tpl);
+
+	  			//根据窗口设置高度
+	  			var wh=$(window).height()-80-50;//80 顶部距离  50底部距离
+	  			$('.list-box-item').css({height:wh});
+
+	  			/*********绑定事件*********/
+	  			$('.list-title').click(function(ev){
+	  				initTodoListForm();//清空上次添加内容
+	  				var classname=ev.toElement.className;//事件源
+	  				var id=$(this).attr('data-id');//待办事项分类id
+	  				//是否点击添加按钮
+	  				if(classname.indexOf('addItem')!=-1){
+	  					form.val('TodoListForm',{todo_list_category_id:id});//关联待办事项分类id
+	  					layer.open({
+					  		title:'添加事项',
+							type: 1,
+							area:['650px','450px'],
+							skin:'ShowTodoListPanel',
+							content: $('#TodoListPanel')
+						});
+	  				}
+	  			})
+
+	  			$('.list-item').click(function(ev){
+
+
+	  				var el=ev.toElement;//事件源
+	  				var classname=el.className;//事件源类名称
+	  				var id=$(this).attr('data-id');//待办事项id
+	  				var _this=this;//list-item
+
+	  				//是否点击完成
+	  				if(classname.indexOf('circle')!=-1){
+	  					$(_this).find('.ok').show();
+	  					$.ajax({
+					  		url:config['TodoList_API'],
+					  		type:'post',
+					  		dataType:'json',
+					  		data:{id:id,finished:1},
+					  		success:function(data){
+
+					  			//成功，先动画，后删除元素
+					  			if(data.errorcode==0){
+					  				$(_this).animate({
+					  					height:0,
+					  					opacity:0,
+					  					paddingTop:0,
+					  					paddingBottom:0
+					  				},function(){
+					  					$(_this).remove()
+					  				});
+					  			}else{
+					  				top.layer.msg(data.errormsg);
+					  				$(_this).find('.ok').hide();
+					  			}
+
+					  		},
+					  		error:function(err){
+					  			$(_this).find('.ok').hide();
+					  			layer.msg(err.message || err.responseText);
+					  		}
+					  	})
+	  				}
+
+	  				//是否点击编辑
+	  				if(classname.indexOf('layui-icon-edit')!=-1){
+
+	  					initTodoListForm();
+
+	  					$.ajax({
+	  						url:config['GetTodoList_API'],
+	  						data:{id:id},
+	  						dataType:'json',
+	  						success:function(res){
+
+	  							if(!res)return false;
+
+								form.val('TodoListForm',res);
+
+								layer.open({
+							  		title:'编辑事项',
+									type: 1,
+									area:['650px','450px'],
+									skin:'ShowTodoListPanel',
+									content: $('#TodoListPanel')
+								});
+
+	  						},
+	  						error:function(err){
+					  			layer.msg(err.message || err.responseText);
+					  		}
+	  					})
+
+	  				}
+
+	  				//是否点击删除
+	  				if(classname.indexOf('layui-icon-delete')!=-1){
+
+	  					$.ajax({
+					  		url:config['DeleteTodoList_API'],
+					  		type:'post',
+					  		dataType:'json',
+					  		data:{id:id},
+					  		success:function(data){
+
+					  			//成功，先动画，后删除元素
+					  			if(data.errorcode==0){
+					  				$(_this).animate({
+					  					height:0,
+					  					opacity:0,
+					  					paddingTop:0,
+					  					paddingBottom:0
+					  				},function(){
+					  					$(_this).remove()
+					  				});
+					  			}else{
+					  				top.layer.msg(data.errormsg);
+					  				$(_this).find('.ok').hide();
+					  			}
+
+					  		},
+					  		error:function(err){
+					  			$(_this).find('.ok').hide();
+					  			layer.msg(err.message || err.responseText);
+					  		}
+					  	})
+
+	  				}
+
+	  			})
+
+	  		}
+	  	})
+
+	  	function initTodoListForm(){
+	  		form.val('TodoListForm',{
+	  			title:'',
+	  			importance:'1',
+	  			id:'',
+	  			content:''
+	  		});
+	  	}
+
+		  
+		//分类表单提交
+		form.on('submit(AddProjectSubmit)', function(formdata){
+
+		  	var data=formdata.field;
+
+		  	$.ajax({
+		  		url:config['TodoListCategory_API'],
+		  		type:'post',
+		  		dataType:'json',
+		  		data:data,
+		  		success:function(data){
+		  			top.layer.msg(data.errormsg);
+		  			if(data.errorcode==0){
+		  				location.reload();
+		  			}
+		  		},
+		  		error:function(err){
+		  			layer.msg(err.message || err.responseText);
+		  		}
+		  	})
+		    return false;
+	  	});
+	 
+	  	//待办事项表单提交
+	  	form.on('submit(TodoListSubmit)', function(formdata){
+
+		  	var data=formdata.field;
+
+		  	delete data.file;
+
+		  	data.content=layedit.getContent(index);
+
+		  	$.ajax({
+		  		url:config['TodoList_API'],
+		  		type:'post',
+		  		dataType:'json',
+		  		data:data,
+		  		success:function(data){
+		  			top.layer.msg(data.errormsg);
+		  			if(data.errorcode==0){
+		  				location.reload();
+		  			}
+		  		},
+		  		error:function(err){
+		  			layer.msg(err.message || err.responseText);
+		  		}
+		  	})
+		    return false;
+	  	});
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+	});
+
+		
+
+
+		
+  	</script>
+</body>
+</html>

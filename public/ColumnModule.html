@@ -1,0 +1,382 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>栏目模型</title>
+	<link rel="stylesheet" href="/static/lib/layui/css/layui.css" />
+	<style>
+		/*reset*/
+		body,li,ul,h1,h2,h3,h4,h5,h6,p{
+			padding:0;
+			margin:0;
+			font-size:14px;
+		}
+		ul,li{
+			list-style:none;
+		}
+		a{
+			text-decoration: none;
+			color:#000;
+		}
+
+
+		/*导航*/
+		.nav{
+			padding: 15px 20px;
+		    box-shadow: 0 2px 4px rgba(0,0,0,.08);
+		    margin-bottom: 20px;
+		    position: fixed;
+		    z-index: 100;
+		    width: 100%;
+		    background: #fff;
+		}
+		.nav-ul{
+			overflow: hidden;
+		}
+		.nav-item{
+			float: left;
+			color:#606266;
+			font-size:15px;
+		}
+		.nav-link{
+			color:#303133;
+			font-weight: bold;
+		}
+
+		.main{
+			padding:80px 8px 0 8px;
+		}
+
+		#ColumnModulePanel{
+			display: none;
+			padding:15px 15px 0 15px;
+		}
+
+		body .ShowColumnModulePanel #ColumnModulePanel{
+			display: block;
+		}
+		.IconPath{
+			margin-right: 10px;
+		}
+	</style>
+</head>
+<body class="columnModule">
+	
+	<div class="nav">
+		<ul class="nav-ul">
+			<li class="nav-item"><a href="/" class="nav-link">首页</a><i class="layui-icon layui-icon-right"></i></li>
+			<li class="nav-item">栏目模型</li>
+		</ul>
+	</div>
+	
+	<div class="main">
+		
+		<div class="toolsbar">
+			<button type="button" class="layui-btn layui-btn-normal AddModule">添加模型</button>
+			<!-- <button type="button" class="layui-btn layui-btn-danger DelModule">删除模型</button> -->
+		</div>
+		<table class="layui-hide" id="ColumnModule" lay-filter="ColumnModuleTable"></table>
+
+	</div>
+	
+	<!-- 添加、编辑面板 -->
+	<div id="ColumnModulePanel">
+		<div class="layui-form" action="" lay-filter="ColumnModuleForm">
+	        <div class="layui-form-item">
+	            <label class="layui-form-label">模板标题</label>
+	            <div class="layui-input-block">
+	                <input type="text" name="ModuleName" required  lay-verify="required" placeholder="模板标题" autocomplete="off" class="layui-input">
+	            </div>
+	        </div>
+	        <div class="layui-form-item">
+	            <label class="layui-form-label">模型表名</label>
+	            <div class="layui-input-block">
+	                <input type="text" name="ModuleTableName" required  lay-verify="required" placeholder="模板表名" autocomplete="off" class="layui-input">
+	            </div>
+	        </div>
+	        <div class="layui-form-item">
+	            <label class="layui-form-label">模型表名</label>
+	            <div class="layui-input-block">
+	            	<img class="IconPath" height="40">
+	                <button type="button" class="layui-btn" id="UploadIcon">
+					  <i class="layui-icon">&#xe67c;</i>上传图片
+					</button>
+	            </div>
+	        </div>
+	        <div class="layui-form-item layui-form-text">
+	            <label class="layui-form-label">排序</label>
+	            <div class="layui-input-block">
+	            <input type="text" name="sort" placeholder="排序" autocomplete="off" class="layui-input">
+	            </div>
+	        </div>
+	        <div class="layui-form-item">
+	            <label class="layui-form-label">模型备注</label>
+	            <div class="layui-input-block">
+	                <textarea placeholder="请输入内容" class="layui-textarea" name="ModuleRemark"></textarea>
+	            </div>
+	        </div>
+	        
+	        <div class="layui-form-item">
+	            <div class="layui-input-block">
+	            <button class="layui-btn layui-btn-normal" lay-submit lay-filter="ColumnModuleSubmit">立即提交</button>
+	            <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+	            </div>
+	        </div>
+	        <input type="hidden" name="id" value="">
+	    </div>
+	</div>
+	 
+	<script type="text/html" id="ColumnModuleBar">
+	  <a class="layui-btn layui-btn-xs" lay-event="edit">编辑</a>
+	  <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a>
+	</script>
+	
+	<script src="/static/js/config.js"></script>
+  	<script src="/static/lib/layui/layui.js"></script>
+  	<script>
+		layui.use(['table','layer','jquery','form','upload'], function(){
+			var table = layui.table,
+				layer=layui.layer,
+				$=layui.jquery,
+				upload=layui.upload,
+				form=layui.form;
+
+				$.ajax({
+					url:config['APIURL']+'/test',
+					data:{test:JSON.stringify([{name:'cj',age:20}])},
+					success:function(data){
+						console.log(data);
+					}
+				})
+
+			var IconPath='';
+				//执行实例
+				var uploadInst = upload.render({
+				    elem: '#UploadIcon' //绑定元素
+				    ,url: config['UploadImages_API'] //上传接口
+				    ,done: function(res){
+				    	layer.msg(res.errormsg)
+				    	IconPath=res.data;
+				    	$('.IconPath').attr('src',res.data);
+				    }
+				    ,error: function(index, upload){
+				      //当上传失败时，你可以生成一个“重新上传”的按钮，点击该按钮时，执行 upload() 方法即可实现重新上传
+				    }
+				});
+
+
+			table.render({
+			elem: '#ColumnModule'
+			,id:'ColumnModuleTable'
+			,url:config['GetColumnModuleList_API']
+			,title: '栏目模型'
+			,parseData:function(res){
+		    	return {
+			      "code": res.errorcode, //解析接口状态
+			      "msg": res.errormsg, //解析提示文本
+			      "data": res.data //解析数据列表
+			    };
+		    }
+			,cols: [[
+			  //{type: 'checkbox', fixed: 'left'}
+			  {field:'ModuleName', title:'模型标题'}
+			  ,{field:'ModuleTableName', title:'模型表名'}
+			  ,{field:'icon', title:'模型图片',templet:function(d){
+			  	if(!d.icon)return '';
+			  	return '<img src="'+d.icon+'" style="height:100%;"/>';
+			  }}
+			  ,{field:'ModuleRemark', title:'模型备注'}
+			  ,{field:'FieldManagement',title:'字段管理',templet:function(d){
+			  	return '<a href="FieldManagement.html?model_id='+d.id+'&ModuleTableName='+d.ModuleTableName+'" class="layui-btn layui-btn-normal layui-btn-xs">查看字段</a>'
+			  }}
+			  ,{field:'ModuleState',title:'状态',templet:function(d){
+			  	if(d.ModuleState==1){//显示
+		      		return '<input type="checkbox" name="ModuleState" value="'+d.id+'" lay-skin="switch" lay-text="显示|隐藏" lay-filter="ModuleState" checked="checked">';
+		      	}else{//隐藏
+		      		return '<input type="checkbox" name="ModuleState" value="'+d.id+'" lay-skin="switch" lay-text="显示|隐藏" lay-filter="ModuleState">';
+		      	}
+			  }}
+			  ,{field:'sort',title:'排序',edit:'text',width:60}
+			  ,{field:'', title:'操作', width:150,toolbar:'#ColumnModuleBar'}
+			]]
+			,page: false
+			});
+
+
+			//模型状态编辑事件
+		  	form.on('switch(ModuleState)',function(data){
+
+		  		var value=data.elem.checked?1:0;
+		  		$.ajax({
+					url:config['ColumnModule_API'],
+					data:{id:data.value,ModuleState:value},
+					type:'post',
+					dataType:'json',
+					success:function(res){
+						if(res.errorcode!=0){
+							layer.msg(res.errormsg);
+						}
+					}
+				})
+
+		  	})
+
+			$('.AddModule').click(function(){
+				init()
+				layer.open({
+			  		title:'添加模型',
+					type: 1,
+					area:['600px'],
+					skin:'ShowColumnModulePanel',
+					content: $('#ColumnModulePanel')
+				});
+			})
+
+			//监听单元格编辑事件
+			table.on('edit(ColumnModuleTable)', function(obj){ //注：edit是固定事件名，test是table原始容器的属性 lay-filter="对应的值"
+				$.ajax({
+					url:config['ColumnModule_API'],
+					data:{id:obj.data.id,'sort':obj.value},
+					type:'post',
+					dataType:'json',
+					success:function(res){
+						if(res.errorcode!=0){
+							layer.msg(res.errormsg);
+							return false;
+						}
+						table.reload('ColumnModuleTable',{
+							url:config['GetColumnModuleList_API']
+						})
+					}
+				})
+			});
+
+			/*$('.DelModule').click(function(){
+
+				layer.confirm('删除将不可恢复，您确定删除吗？', function(index){
+
+		  			//获取选中的数据
+				  	var checkStatus = table.checkStatus('ColumnModuleTable');
+				  	var CheckedData=checkStatus.data;
+				  	var str='';
+
+				  	//拼接删除的id字符串
+				  	for(var i=0,len=CheckedData.length;i<len;i++){
+				  		str+=','+CheckedData[i].id;
+				  	}
+				  	str=str.substring(1);
+
+				  	//发起删除请求
+			  		$.ajax({
+						url:config['DeleteColumnModule_API'],
+						data:{id:str},
+						type:'post',
+						dataType:'json',
+						success:function(res){
+							layer.msg(res.errormsg);
+							if(res.errorcode==0){
+								table.reload('ColumnModuleTable',{
+									url:config['GetColumnModuleList_API']
+								})
+							}
+						}
+					})
+
+				});
+
+			})*/
+
+			//添加/更新栏目模型
+			form.on('submit(ColumnModuleSubmit)',function(data){
+
+				data.field.initValue=$('[name="ModuleTableName"]').attr('data-initValue');
+				data.field.icon=IconPath;
+				delete data.field.file;
+				$.ajax({
+					url:config['ColumnModule_API'],
+					data:data.field,
+					type:'post',
+					dataType:'json',
+					success:function(res){
+						top.layer.msg(res.errormsg);
+						if(res.errorcode==0){
+							location.reload();
+						}
+					}
+				})
+
+			  	return false;
+			  })
+
+			//监听行工具事件
+			table.on('tool(ColumnModuleTable)', function(obj){
+				var data = obj.data;
+
+				if(obj.event === 'del'){
+
+				  layer.confirm('真的删除行么', function(index){
+				    $.ajax({
+						url:config['DeleteColumnModule_API'],
+						data:{id:data.id,ModuleTableName:data.ModuleTableName},
+						dataType:'json',
+						success:function(res){
+							layer.msg(res.errormsg);
+							if(res.errorcode==0){
+								table.reload('ColumnModuleTable',{
+									url:config['GetColumnModuleList_API']
+								})
+			        			layer.close(index);
+							}
+						}
+					})
+				  });
+
+				} else if(obj.event === 'edit'){
+
+					init()
+
+					$.ajax({
+						url:config['GetColumnModuleById_API'],
+						data:{id:data.id},
+						dataType:'json',
+						success:function(res){
+							var res=res.data;
+							if(res && res.ModuleTableName){
+								$('[name="ModuleTableName"]').attr('data-initValue',res.ModuleTableName);
+							}
+							form.val('ColumnModuleForm',res);
+							$('.IconPath').attr('src',res.icon);
+							IconPath=res.icon;
+						}
+					})
+
+				  	layer.open({
+				  		title:'编辑模型',
+						type: 1,
+						area:['600px'],
+						skin:'ShowColumnModulePanel',
+						content: $('#ColumnModulePanel')
+					});
+
+				}
+			});
+
+
+
+			function init(){
+				$('.IconPath').removeAttr('src');
+			  	form.val('ColumnModuleForm',{
+			  		ModuleName:'',
+			  		ModuleTableName:'',
+			  		ModuleRemark:'',
+			  		sort:'',
+			  		id:''
+			  	})
+
+			}
+
+
+		});
+  	</script>
+</body>
+</html>

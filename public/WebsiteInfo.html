@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>网站信息</title>
+	<link rel="stylesheet" href="/static/lib/layui/css/layui.css">
+	<style>
+	/*reset*/
+	body,li,ul,h1,h2,h3,h4,h5,h6,p{
+		padding:0;
+		margin:0;
+		font-size:14px;
+	}
+	ul,li{
+		list-style:none;
+	}
+	a{
+		text-decoration: none;
+		color:#000;
+	}
+
+	/*导航*/
+	.nav{
+		padding: 15px 20px;
+	    box-shadow: 0 2px 4px rgba(0,0,0,.08);
+	    margin-bottom: 20px;
+	    position: fixed;
+	    z-index: 100;
+	    width: 100%;
+	    background: #fff;
+	}
+	.nav-ul{
+		overflow: hidden;
+	}
+	.nav-item{
+		float: left;
+		color:#606266;
+		font-size:15px;
+	}
+	.nav-link{
+		color:#303133;
+		font-weight: bold;
+	}
+
+
+	.main{
+		padding:50px 8px 0 8px;
+	}
+	.tip {
+	    padding: 8px 16px;
+	    background-color: #ecf8ff;
+	    border-radius: 4px;
+	    border-left: 5px solid #50bfff;
+	    margin: 20px 0;
+	}
+	.WebsiteInfo .maxwidth{
+		max-width:600px;
+	}
+	#UploadICO,#UploadLogo{
+		vertical-align: top;
+		border-radius:3px;
+	}
+	</style>
+</head>
+<body class="WebsiteInfo">
+
+	<!-- 导航 -->
+	<div class="nav">
+		<ul class="nav-ul">
+			<li class="nav-item"><a href="/" class="nav-link">首页</a><i class="layui-icon layui-icon-right"></i></li>
+			<li class="nav-item">网站信息</li>
+		</ul>
+	</div>
+
+	<div class="main">
+
+
+		<div class="tip">网站基本信息</div>
+		 
+		<div class="layui-form " action="" lay-filter="WebsiteInfo">
+
+			<div class="maxwidth">
+			  	<div class="layui-form-item">
+			    	<label class="layui-form-label">网站名称</label>
+			    	<div class="layui-input-block">
+			      		<input type="text" name="WebsiteName" autocomplete="off" placeholder="请输入网站名称" class="layui-input">
+			    	</div>
+			  	</div>
+			  	<div class="layui-form-item">
+			    	<label class="layui-form-label">网站LOGO</label>
+			    	<div class="layui-input-block">
+			    		<img height="100" class="logoImg">
+				        <button type="button" class="layui-btn layui-btn-normal" id="UploadLogo">
+						  <i class="layui-icon">&#xe67c;</i>点击上传
+						</button>
+			    	</div>
+			  	</div>
+			 	<div class="layui-form-item">
+			    	<label class="layui-form-label">地址栏图标</label>
+				    <div class="layui-input-block">
+				    	<img src="/favicon.ico" height="32" class="icoImg">
+				        <button type="button" class="layui-btn layui-btn-sm layui-btn-normal" id="UploadICO">
+						  <i class="layui-icon">&#xe67c;</i>ico图标
+						</button>
+				    </div>
+			  	</div>
+			  	<div class="layui-form-item">
+			    	<label class="layui-form-label">网站关键词</label>
+				    <div class="layui-input-block">
+				      <input type="text" name="WebsiteKeyword" autocomplete="off" placeholder="网站关键词" class="layui-input">
+				    </div>
+			  	</div>
+
+				<div class="layui-form-item layui-form-text">
+				    <label class="layui-form-label">网站描述</label>
+				    <div class="layui-input-block">
+				      <textarea placeholder="请输入描述内容" class="layui-textarea" name="WebsiteDesc"></textarea>
+				    </div>
+				</div>
+			</div>
+
+			<div class="tip">网站底部信息（显示在网站前台底部）</div>
+
+			<div class="maxwidth">
+				<div class="layui-form-item">
+				    <label class="layui-form-label">版权信息</label>
+				    <div class="layui-input-block">
+				      <input type="text" name="WebsiteCopy" autocomplete="off" placeholder="版权信息" class="layui-input">
+				    </div>
+				</div>
+				<div class="layui-form-item">
+				    <label class="layui-form-label">ICP备案</label>
+				    <div class="layui-input-block">
+				      <input type="text" name="WebsiteICP" autocomplete="off" placeholder="ICP备案" class="layui-input">
+				    </div>
+				</div>
+				<div class="layui-form-item">
+				    <label class="layui-form-label">地址</label>
+				    <div class="layui-input-block">
+				      <input type="text" name="WebsiteAddress" autocomplete="off" placeholder="地址" class="layui-input">
+				    </div>
+				</div>
+				<div class="layui-form-item">
+				    <label class="layui-form-label">站长邮箱</label>
+				    <div class="layui-input-block">
+				      <input type="text" name="WebsiteEmail" autocomplete="off" placeholder="站长邮箱" class="layui-input">
+				    </div>
+				</div>
+				<div class="layui-form-item">
+				    <label class="layui-form-label">联系方式</label>
+				    <div class="layui-input-block">
+				      <input type="text" name="WebsitePhone" autocomplete="off" placeholder="联系方式" class="layui-input">
+				    </div>
+				</div>
+			</div>
+
+			<div class="layui-form-item layui-form-text">
+				<label class="layui-form-label">自定义信息</label>
+				<div class="layui-input-block">
+				  <textarea class="layui-textarea layui-hide" name="WebsiteContent" lay-verify="content" id="LAY_demo_editor"></textarea>
+				</div>
+			</div>
+			<div class="layui-form-item">
+			    <div class="layui-input-block">
+			      <button type="submit" class="layui-btn layui-btn-normal" lay-submit="" lay-filter="submit">立即提交</button>
+			    </div>
+			</div>
+		
+		</div>
+		  
+	</div>
+<!-- <script src="/static/js/jquery.min.js"></script> -->
+<script src="/static/lib/layui/layui.js"></script>
+<script src="/static/js/config.js"></script>
+<script>
+
+layui.use(['form', 'layedit','jquery','upload'], function(){
+
+
+	var form = layui.form
+	,layer = layui.layer
+	,layedit = layui.layedit
+	,$=layui.jquery,
+	upload=layui.upload,
+	WebsiteLogo=WebsiteFavicon=newFavicon='',
+	editIndex=null;
+
+	//请求初始数据
+	$.ajax({
+		url:config['GetWebsiteInfo'],
+		success:function(res){
+
+			var FormData=JSON.parse(res.data);
+
+
+			$('.logoImg').attr('src',FormData.WebsiteLogo);
+
+			WebsiteLogo=FormData.WebsiteLogo;
+			WebsiteFavicon=FormData.WebsiteFavicon;
+
+			form.val('WebsiteInfo',FormData);//初始表单
+
+			$('#LAY_demo_editor').val(FormData.WebsiteContent);//自定义信息内容
+
+			//创建一个编辑器
+			editIndex = layedit.build('LAY_demo_editor');
+		}
+	})
+
+	//上传实例
+	var LogoUpload = upload.render({
+		elem: '#UploadLogo' //绑定元素
+		,url: config['UploadImages_API']//上传接口
+		,done: function(res){
+			if(res.errorcode==0){
+				$('.logoImg').attr('src',res.data);
+				WebsiteLogo=res.data;
+			}else{
+				layer.msg(res.errormsg);
+			}
+		}
+		,error: function(err){
+		  layer.msg(err);
+		}
+	});
+	var ICOUpload = upload.render({
+		elem: '#UploadICO' //绑定元素
+		,url: config['UploadImages_API']//上传接口
+		,done: function(res){
+			if(res.errorcode==0){
+				$('.icoImg').attr('src',res.data);
+				WebsiteFavicon=res.data;
+				newFavicon=1; //表示更改了ico图标
+			}else{
+				layer.msg(res.errormsg);
+				newFavicon=0 //上传失败，更改失败
+			}
+		}
+		,error: function(err){
+		  layer.msg(err);
+		  newFavicon=0 //上传失败，更改失败
+		}
+	});
+
+	//监听提交
+	form.on('submit(submit)', function(data){
+		
+
+		delete data.field.file;
+
+		data.field.WebsiteContent=layedit.getContent(editIndex);
+
+		var SendData=data.field;
+		SendData.WebsiteLogo=WebsiteLogo;
+		SendData.WebsiteFavicon=WebsiteFavicon;
+		SendData.newFavicon=newFavicon;
+
+		$.ajax({
+			url:config['WebsiteInfo_API'],
+			data:SendData,
+			type:'post',
+			dataType:'json',
+			success:function(res){
+				top.layer.msg(res.errormsg);
+				if(res.errorcode==0){
+					location.reload();
+				}
+			}
+		})
+
+		return false;
+	});
+	 
+  
+});
+</script>
+</body>
+</html>

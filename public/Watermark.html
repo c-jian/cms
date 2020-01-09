@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>网站信息</title>
+	<link rel="stylesheet" href="/static/lib/layui/css/layui.css">
+	<style>
+	/*reset*/
+	body,li,ul,h1,h2,h3,h4,h5,h6,p{
+		padding:0;
+		margin:0;
+		font-size:14px;
+	}
+	ul,li{
+		list-style:none;
+	}
+	a{
+		text-decoration: none;
+		color:#000;
+	}
+
+	/*导航*/
+	.nav{
+		padding: 15px 20px;
+	    box-shadow: 0 2px 4px rgba(0,0,0,.08);
+	    margin-bottom: 20px;
+	    position: fixed;
+	    z-index: 100;
+	    width: 100%;
+	    background: #fff;
+	}
+	.nav-ul{
+		overflow: hidden;
+	}
+	.nav-item{
+		float: left;
+		color:#606266;
+		font-size:15px;
+	}
+	.nav-link{
+		color:#303133;
+		font-weight: bold;
+	}
+
+
+	.main{
+		padding:60px 8px 0 8px;
+	}
+
+	.maxwidth{
+		max-width:300px;
+	}
+	.layui-form{
+		border:1px solid #eee;
+		border-bottom: none;
+	}
+	#UploadWatermark{
+		vertical-align: top;
+		border-radius:3px;
+	}
+	.watermarkImg{
+		height:38px;
+	}
+	.layui-nav{
+		padding:0 2px;
+		background: #fff;
+	}
+	.layui-nav .layui-nav-item a:hover, .layui-nav .layui-this a{
+		color:#333;
+	}
+	.layui-nav .layui-nav-item a{
+		color:#000;
+	}
+	.layui-nav .layui-nav-item{
+		line-height: 45px;
+	}
+	.layui-form-label{
+		width:90px;
+	}
+	.layui-input-block{
+		margin-left:120px;
+	}
+	.layui-form-item{
+		border-bottom: 1px solid #eee;
+		padding:15px 0;
+	}
+	.watermarkText,.watermarkPic{
+		display: none;
+	}
+	</style>
+</head>
+<body class="Watermark">
+
+	<!-- 导航 -->
+	<div class="nav">
+		<ul class="nav-ul">
+			<li class="nav-item"><a href="/" class="nav-link">首页</a><i class="layui-icon layui-icon-right"></i></li>
+			<li class="nav-item">图片水印</li>
+		</ul>
+	</div>
+
+	<div class="main">
+		<ul class="layui-nav">
+			<li class="layui-nav-item"><a href="UploadSetting.html">上传配置</a></li>
+		  	<li class="layui-nav-item"><a href="Thumbnail.html">缩略图</a></li>
+		  	<li class="layui-nav-item layui-this"><a href="###">图片水印</a></li>
+		</ul>
+		<div class="layui-form" action="" lay-filter="Watermark">
+			
+			
+
+			<div class="layui-form-item">
+			    <label class="layui-form-label">图片水印开关</label>
+			    <div class="layui-input-block">
+			      <input type="checkbox" name="WatermarkSwitch" lay-skin="switch" lay-text="ON|OFF">
+			    </div>
+			</div>
+
+			<div class="layui-form-item">
+			    <label class="layui-form-label">水印类型</label>
+			    <div class="layui-input-block">
+			    	<input type="radio" name="WatermarkType" value="0" title="图片水印" lay-filter="WatermarkType"></br>
+	     			<input type="radio" name="WatermarkType" value="1" title="文字水印" lay-filter="WatermarkType">
+			    </div>
+			</div>
+		  
+
+			<div class="layui-form-item layui-form-text">
+			    <label class="layui-form-label">水印位置</label>
+			    <div class="layui-input-block ">
+
+			    	<input type="radio" name="WatermarkPosition" value="1" title="左上">
+	     			<input type="radio" name="WatermarkPosition" value="2" title="顶中">
+	     			<input type="radio" name="WatermarkPosition" value="3" title="右右"></br>
+
+
+			    	<input type="radio" name="WatermarkPosition" value="4" title="左中">
+	     			<input type="radio" name="WatermarkPosition" value="5" title="中间">
+	     			<input type="radio" name="WatermarkPosition" value="6" title="右中"></br>
+
+
+			    	<input type="radio" name="WatermarkPosition" value="7" title="左下">
+			    	<input type="radio" name="WatermarkPosition" value="8" title="底中">
+	     			<input type="radio" name="WatermarkPosition" value="9" title="右下">
+
+			    </div>
+			</div>
+
+			<div class="watermarkText">
+
+				<div class="layui-form-item">
+				    <label class="layui-form-label">文字水印内容</label>
+				    <div class="layui-input-block">
+				      <input type="text" name="WatermarkContent" autocomplete="off" placeholder="文字水印内容" class="layui-input maxwidth" value="">
+				    </div>
+				</div>
+				
+				<div class="layui-form-item">
+				    <label class="layui-form-label">文字水印字体</label>
+				    <div class="layui-input-block">
+				      <input type="text" name="WatermarkFontFamily" autocomplete="off" placeholder="文字水印字体" class="layui-input maxwidth" value="">
+				    </div>
+				</div>
+				
+				<div class="layui-form-item">
+				    <label class="layui-form-label">字体大小</label>
+				    <div class="layui-input-block">
+				      <input type="text" name="WatermarkFontSize" autocomplete="off" placeholder="字体大小" class="layui-input maxwidth" value="">
+				    </div>
+				</div>
+
+				<div class="layui-form-item">
+				    <label class="layui-form-label">文字角度</label>
+				    <div class="layui-input-block">
+				      <input type="text" name="WatermarkAngle" autocomplete="off" placeholder="文字角度" class="layui-input maxwidth" value="">
+				    </div>
+				</div>
+
+				<div class="layui-form-item">
+				    <label class="layui-form-label">字体颜色</label>
+				    <div class="layui-input-block">
+				      <input type="text" name="watermarkColor" autocomplete="off" placeholder="字体颜色" class="layui-input maxwidth" value="">
+				    </div>
+				</div>
+
+			</div>
+
+			
+			<div class="watermarkPic">
+				<div class="layui-form-item">
+				    <label class="layui-form-label">水印图片</label>
+				    <div class="layui-input-block">
+				    	<img class="watermarkImg">
+				        <button type="button" class="layui-btn layui-btn-normal" id="UploadWatermark">
+						  点击上传
+						</button>
+				    </div>
+				</div>
+
+				<div class="layui-form-item">
+				    <label class="layui-form-label">水印透明度</label>
+				    <div class="layui-input-block">
+				      <input type="text" name="WatermarkTransparency" autocomplete="off" placeholder="水印透明度" class="layui-input maxwidth" value="">
+				    </div>
+				</div>
+			</div>
+
+
+			
+			<div class="layui-form-item">
+			    <div class="layui-input-block">
+			      <button type="submit" class="layui-btn layui-btn-normal" lay-submit="" lay-filter="WatermarkSubmit">立即提交</button>
+			    </div>
+			</div>
+
+		</div>
+		  
+	</div>
+
+	<script src="/static/js/config.js"></script>
+	<script src="/static/lib/layui/layui.js"></script>
+  	<script>
+  		layui.use(['form','jquery','upload','layer'], function(){
+
+			var form = layui.form
+			,layer = layui.layer
+			,$=layui.jquery
+			,upload=layui.upload
+			,WatermarkImage='';
+
+
+			//执行实例
+		  	var uploadInst = upload.render({
+			    elem: '#UploadWatermark' //绑定元素
+			    ,url: config['UploadImages_API'] //上传接口
+			    ,data:{type:'watermark'}
+			    ,done: function(res){
+			    	layer.msg(res.errormsg);
+			    	if(res.errorcode==0){
+			    		$('.watermarkImg').attr('src',res.data);
+			    		WatermarkImage=res.data;
+			    	}
+			    }
+			    ,error: function(err){
+			      	layer.msg(err);
+			    }
+			});
+
+		  	//请求初始数据
+			$.ajax({
+				url:config['GetConfig_API'],
+				data:{type:'watermark'},
+				success:function(res){
+
+					if(res.errorcode!=0){
+						layer.msg(res.errormsg);
+						return false;
+					}
+
+					var FormData=JSON.parse(res.data);
+
+					WatermarkImage=FormData.WatermarkImage;
+
+					$('.watermarkImg').attr('src',WatermarkImage);
+
+					if(FormData.WatermarkType==1){
+						$('.watermarkText').show();
+			  			$('.watermarkPic').hide();
+					}
+
+					form.val('Watermark',FormData);//初始表单
+				}
+			})
+
+
+			form.on('radio(WatermarkType)', function(data){
+			  if(data.value==1){
+			  	$('.watermarkText').show();
+			  	$('.watermarkPic').hide();
+			  }else{
+			  	$('.watermarkText').hide();
+			  	$('.watermarkPic').show();
+			  }
+			}); 
+
+			form.on('submit(WatermarkSubmit)',function(data){
+				delete data.field.file;
+				data.field.type='watermark';
+				data.field.WatermarkImage=WatermarkImage;
+				$.ajax({
+					url:config['UpdateConfig_API'],
+					data:data.field,
+					type:'post',
+					dataType:'json',
+					success:function(res){
+						top.layer.msg(res.errormsg);
+						if(res.errorcode==0){
+							location.reload();
+						}
+					}
+				})
+				return false;
+
+			})
+		  
+		});
+  	</script>
+</body>
+</html>

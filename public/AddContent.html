@@ -1,0 +1,504 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>网站信息</title>
+	<link rel="stylesheet" href="/static/lib/layui/css/layui.css">
+	<style>
+	/*reset*/
+	body,li,ul,h1,h2,h3,h4,h5,h6,p{
+		padding:0;
+		margin:0;
+		font-size:14px;
+	}
+	ul,li{
+		list-style:none;
+	}
+	a{
+		text-decoration: none;
+		color:#000;
+	}
+
+	/*导航*/
+	.nav{
+		padding: 15px 20px;
+	    box-shadow: 0 2px 4px rgba(0,0,0,.08);
+	    margin-bottom: 20px;
+	    position: fixed;
+	    z-index: 1000;
+	    width: 100%;
+	    background: #fff;
+	}
+	.nav-ul{
+		overflow: hidden;
+	}
+	.nav-item{
+		float: left;
+		color:#606266;
+		font-size:15px;
+	}
+	.nav-link{
+		color:#303133;
+		font-weight: bold;
+	}
+
+
+	.main{
+		padding:50px 8px 0 8px;
+	}
+	.tip {
+	    padding: 8px 16px;
+	    background-color: #ecf8ff;
+	    border-radius: 4px;
+	    border-left: 5px solid #50bfff;
+	    margin: 20px 0;
+	}
+	.maxw700{
+		max-width:700px;
+	}
+	.uploadbox{
+		width:120px;
+		height:120px;
+		border-radius: 5px;
+		border:1px dashed #c0ccda;
+		text-align: center;
+		line-height: 120px;
+		cursor: pointer;
+		background-color: #fbfdff;
+		display: inline-block;
+		margin-left:10px;
+	}
+	.uploadbox:hover{
+		border-color: #409EFF;
+	}
+	.ArticleImgBox{
+		position: relative;
+		display: inline-block;
+	}
+	.ArticleImgBox{
+		max-height: 120px;
+		max-width: 120px;
+		border-radius: 5px;
+	}
+	.ArticleImgBox img{
+		max-height: 120px;
+		max-width: 120px;
+	}
+	.ArticleImgBox .mask{
+		width:100%;
+		height:100%;
+		position: absolute;
+		background: rgba(0,0,0,.5);
+		left:0;
+		top:0;
+		z-index: 100;
+		display: none;
+	}
+	.ArticleImgBox .layui-icon-delete{
+		position: absolute;
+		left:50%;
+		top:50%;
+		color:#fff;
+		z-index: 101;
+		font-size:20px;
+		margin-left:-10px;
+		margin-top:-10px;
+		cursor: pointer;
+		display: none;
+	}
+	.ArticleImgBox:hover .mask,.ArticleImgBox:hover .layui-icon-delete{
+		display:block;
+	}
+	
+	#container{
+		max-width:1500px;
+	}
+	</style>
+</head>
+<body class="Article">
+
+	<!-- 导航 -->
+	<div class="nav">
+		<ul class="nav-ul">
+			<li class="nav-item"><a href="/" class="nav-link">首页</a><i class="layui-icon layui-icon-right"></i></li>
+			<li class="nav-item">添加内容</li>
+		</ul>
+	</div>
+
+	<div class="main">
+		
+
+		<div class="layui-form" action="" lay-filter="AddContentForm">
+		<div class="layui-tab">
+		  <ul class="layui-tab-title">
+		    <li class="layui-this">基础内容</li>
+		    <li>SEO设置</li>
+		  </ul>
+		  <div class="layui-tab-content">
+		    <div class="layui-tab-item layui-show TplDataContent">
+				 
+		    </div>
+		    <div class="layui-tab-item">
+		    	<div class="layui-form-item maxw700">
+				    <label class="layui-form-label">SEO标题</label>
+				    <div class="layui-input-block">
+				      <input type="text" name="SEOTitle" placeholder="SEO标题" autocomplete="off" class="layui-input">
+				    </div>
+				</div>
+				<div class="layui-form-item maxw700">
+				    <label class="layui-form-label">SEO关键词</label>
+				    <div class="layui-input-block">
+				      <input type="text" name="SEOKeyword" placeholder="SEO关键词" autocomplete="off" class="layui-input">
+				    </div>
+				</div>
+				<div class="layui-form-item maxw700">
+				    <label class="layui-form-label">SEO描述</label>
+				    <div class="layui-input-block">
+				      <input type="text" name="SEODescription" placeholder="SEO描述" autocomplete="off" class="layui-input">
+				    </div>
+				</div>
+		    </div>
+		  </div>
+
+		  <div class="layui-form-item">
+		    <div class="layui-input-block">
+		      <button class="layui-btn layui-btn-normal" lay-submit lay-filter="AddContentSubmit">立即提交</button>
+		      <button class="layui-btn layui-btn-primary return">返回</button>
+		    </div>
+		  </div>
+		</div>
+		<input type="hidden" name="id" value="">
+		</div>
+		  
+	</div>
+
+	<script src="/static/js/jquery.min.js"></script>
+	<script src="/static/js/config.js"></script>
+
+	<!-- 配置文件 -->
+    <script type="text/javascript" src="/static/lib/ueditor/ueditor.config.js"></script>
+    <!-- 编辑器源码文件 -->
+    <script type="text/javascript" src="/static/lib/ueditor/ueditor.all.js"></script>
+
+	<script>
+		function getURLParam(param){
+			var search=location.search.substring(1);
+			if(search){
+				var searchArr=search.split('&');
+				for(var i=0,len=searchArr.length;i<len;i++){
+					var paramArr=searchArr[i].split('=');
+					if(paramArr[0]==param)return paramArr[1];
+				}
+			}
+			return false;
+		}
+		var cid=getURLParam('cid');
+		var mid=getURLParam('model_id');
+		$.ajax({
+			url:config['GetFieldByCID_API'],
+			async:false,
+			data:{cid:cid},
+			dataType:'json',
+			success:function(d){
+				var data=d.data;
+				if(!data)return false;
+				var tplData=FormContent(data);
+				$('.TplDataContent').html(tplData);
+				if($('#container').length){
+					window.ue = UE.getEditor('container',{
+						initialFrameHeight:500
+					});
+				}
+				
+			}
+		})
+
+
+		//生成相应表达内容
+		function FormContent(data){
+			var tpl='';
+			for(var j=0,len=data.length;j<len;j++){
+				var type=Number(data[j]['FormType']);
+				tpl+=Formtpl(type,data[j]);
+			}
+
+			return tpl;
+		}
+
+
+		function Formtpl(type,data){
+			var tpl="";
+			var config=JSON.parse(data.FormConfig);
+			switch(type){
+				case 1:
+					//文本框
+					tpl+='<div class="layui-form-item maxw700">'+
+					    '<label class="layui-form-label">'+data['FieldTitle']+'</label>'+
+					    '<div class="layui-input-block">'+
+					      '<input type="text" name="'+data['FieldName']+'" placeholder="'+data['FieldTitle']+'" autocomplete="off" class="layui-input '+config.class+'" '+(config.id?'id="'+config.id+'"':'')+' '+(data['required']?'lay-verify="required"':'')+'>'+
+					    '</div>'+
+					'</div>';
+				break;
+				case 2:
+					//文本域
+					tpl+='<div class="layui-form-item maxw700">'+
+					    '<label class="layui-form-label">'+data['FieldTitle']+'</label>'+
+					    '<div class="layui-input-block">'+
+					      '<textarea name="'+data['FieldName']+'" placeholder="'+data['FieldTitle']+'" class="layui-textarea '+config.class+'" '+(config.id?'id="'+config.id+'"':'')+' '+(data['required']?'lay-verify="required"':'')+'></textarea>'+
+					    '</div>'+
+					'</div>';
+				break;
+				case 3:
+					//编辑器
+					tpl+='<div class="layui-form-item">'+
+					    '<label class="layui-form-label">'+data['FieldTitle']+'</label>'+
+					    '<div class="layui-input-block">'+
+					      '<textarea '+(config.id?'id="'+config.id+'"':'id=container')+' name="'+data['FieldName']+'"><\/textarea>'+
+					    '</div>'+
+					'</div>';
+				break;
+				case 4:
+					//下拉框
+					tpl+='<div class="layui-form-item maxw700">'+
+					    '<label class="layui-form-label">'+data['FieldTitle']+'</label>'+
+					    '<div class="layui-input-block">'+
+					      '<select name="'+data['FieldName']+'" '+(config.id?'id="'+config.id+'"':'')+' class="'+config.class+'" '+(data['required']?'lay-verify="required"':'')+'></select>'+
+					    '</div>'+
+					'</div>';
+				break;
+				case 5:
+					//复选框   这个要考虑下怎么处理
+					tpl+='<div class="layui-form-item maxw700">'+
+					    '<label class="layui-form-label">'+data['FieldTitle']+'</label>'+
+					    '<div class="layui-input-block">';
+					    	for(var j=0,len=config.checkbox.length;j<len;j++){
+					    		if(config.checkbox[j].checked){
+					    			tpl+='<input type="checkbox" name="'+config.checkbox[j].name+'" title="'+config.checkbox[j].text+'" checked '+(config.id?'id="'+config.id+'"':'')+' class="'+config.class+'">';
+					    		}else{
+					    			tpl+='<input type="checkbox" name="'+config.checkbox[j].name+'" title="'+config.checkbox[j].text+'" '+(config.id?'id="'+config.id+'"':'')+' class="'+config.class+'">';
+					    		}
+					    	}
+					    tpl+='</div>'+
+					  '</div>';
+				break;
+				case 6:
+					//单选框
+					tpl+='<div class="layui-form-item">'+
+						    '<label class="layui-form-label">'+data['FieldTitle']+'</label>'+
+						    '<div class="layui-input-block">';
+						    	for(var j=0,len=config.radio.length;j<len;j++){
+						    		if(config.radio[j].checked){
+						    			tpl+='<input type="radio" name="'+data['FieldName']+'" value="'+config.radio[j].value+'" title="'+config.radio[j].text+'" checked class="'+config.class+'">';
+						    		}else{
+						    			tpl+='<input type="radio" name="'+data['FieldName']+'" value="'+config.radio[j].value+'" title="'+config.radio[j].text+'" class="'+config.class+'">';
+						    		}
+						    	}
+						    tpl+='</div>'+
+						'</div>';
+				break;
+				case 7:
+					//开关
+					tpl+='<div class="layui-form-item maxw700">'+
+					    '<label class="layui-form-label">'+data['FieldTitle']+'</label>'+
+					    '<div class="layui-input-block">';
+					    	if(config.switch.checked){
+					    		tpl+='<input type="checkbox" name="'+data['FieldName']+'" lay-skin="switch" lay-text="'+config.switch.text+'" checked '+(config.id?'id="'+config.id+'"':'')+' class="'+config.class+'">';
+					    	}else{
+					    		tpl+='<input type="checkbox" name="'+data['FieldName']+'" lay-skin="switch" lay-text="'+config.switch.text+'" '+(config.id?'id="'+config.id+'"':'')+' class="'+config.class+'">';
+					    	}
+					    tpl+='</div>'+
+					'</div>';
+				break;
+				case 8:
+					//密码框
+			  		tpl+='<div class="layui-form-item">'+
+				            '<label class="layui-form-label">'+data['FieldTitle']+'</label>'+
+				            '<div class="layui-input-inline">'+
+				                '<input type="password" name="'+data['FieldName']+'" placeholder="" autocomplete="off" class="layui-input" '+(config.id?'id="'+config.id+'"':'')+' class="'+config.class+'" '+(data['required']?'lay-verify="required"':'')+'>'+
+				            '</div>'+
+				            '<div class="layui-form-mid layui-word-aux">'+config.tip+'</div>'+
+				        '</div>';
+				break;
+				case 9:
+					//日期选择框
+			  		tpl+='<div class="layui-form-item">'+
+				            '<label class="layui-form-label">'+data['FieldTitle']+'</label>'+
+				            '<div class="layui-input-inline">'+
+				                '<input type="text" class="layui-input '+config.class+'" '+(config.id?'id="'+config.id+'"':'')+' autocomplete="off" '+(data['required']?'lay-verify="required"':'')+'>'+
+				            '</div>'+
+				            '<div class="layui-form-mid layui-word-aux">'+config.tip+'</div>'+
+				        '</div>';
+				break;
+				case 10:
+					//文件上传
+					tpl+='<div class="layui-form-item layui-form-text maxw700">'+
+					    '<label class="layui-form-label">'+data['FieldTitle']+'</label>'+
+					    '<div class="layui-input-block">'+
+							'<div class="ArticleImgBox">'+
+								'<img class="ArticleImageEle">'+
+								'<span class="layui-icon layui-icon-delete"></span>'+
+								'<span class="mask"></span>'+
+							'</div>'+
+					    	'<div class="uploadbox '+config.class+'" '+(config.id?'id="'+config.id+'"':'')+'>'+
+					    		'<button type="button" class="layui-btn layui-btn-sm layui-btn-normal">文件上传</button>'+
+					    	'</div>'+
+					    '</div>'+
+					'</div>'
+				break;
+				case 11:
+					//图片上传
+					tpl+='<div class="layui-form-item layui-form-text maxw700">'+
+					    '<label class="layui-form-label">'+data['FieldTitle']+'</label>'+
+					    '<div class="layui-input-block">'+
+							'<div class="ArticleImgBox">'+
+								'<img class="ArticleImageEle">'+
+								'<span class="layui-icon layui-icon-delete"></span>'+
+								'<span class="mask"></span>'+
+							'</div>'+
+							'<input type="hidden" name="'+data['FieldName']+'" class="PicPath"/>'+
+					    	'<div class="uploadbox '+config.class+'" '+(config.id?'id="'+config.id+'"':'')+'>'+
+					    		'<button type="button" class="layui-btn layui-btn-sm layui-btn-normal">图片上传</button>'+
+					    	'</div>'+
+					    '</div>'+
+					'</div>'
+				break;
+
+			}
+			return tpl;
+		}
+
+
+		var option='<option value=""></option>';
+	  	function createOption(arr,level=1){
+	  		if(!arr || !arr.length)return false;
+	  		for(var i=0,len=arr.length;i<len;i++){
+	  			var str=createStr(level);
+	  			option+='<option value='+arr[i].id+'>'+str+arr[i].cname+'</option>';
+	  			if(arr[i].children && arr[i].children.length>=1){
+	  				createOption(arr[i].children,level+1);
+	  			}
+	  		}
+	  		return option;
+	  	}
+
+	  	function createStr(num,str='--'){
+	  		var arr=new Array(num);
+	  		return arr.join(str);
+	  	}
+
+		$.ajax({
+			url:config['GetColumn_API'],
+			data:{mid:mid},
+			async:false,//同步
+			success:function(data){
+				var optionstr=createOption(data);
+				$('#category').html(optionstr);
+			}
+		})
+	</script>
+	<script src="/static/lib/layui/layui.js"></script>
+  	<script>
+  		var model_id=getURLParam('model_id');//模型id，修改/添加到对应的数据库表下
+  		var aid=getURLParam('aid') || '';//编辑文章id
+  		var cid=getURLParam('cid');
+  		layui.use(['form', 'layedit','upload','element'], function(){
+		  var form = layui.form
+		  ,layer = layui.layer
+		  ,layedit = layui.layedit
+		  upload=layui.upload,
+		  element=layui.element,
+		  
+		  //返回
+		  $('.return').click(function(){
+		  	location.href='/ArticleList.html?aid='+aid+'&cid='+cid+'&mid='+model_id;
+		  	return false;
+		  })
+
+		  //初始化内容
+		  if(aid){
+		  	$.ajax({
+		  		url:config['GetArticleById_API'],
+		  		data:{aid:aid,model_id:model_id},
+		  		dataType:'json',
+		  		success:function(data){
+		  			if(data.errorcode!=0){
+		  				layer.msg(data.errormsg);
+		  				return;
+		  			}
+		  			form.val('AddContentForm',data.data);
+
+		  			//编辑器内容
+		  			if(window.ue){
+		  				ue.setContent(data.data.content);
+		  			}
+
+		  			//图片
+		  			if($('.PicPath').val()){
+		  				$('.ArticleImageEle').attr('src',$('.PicPath').val());
+		  			}
+		  		}
+		  	})
+		  }
+
+
+		  //执行实例
+		  var uploadInst = upload.render({
+		    elem: '#UploadArticleImage' //绑定元素
+		    ,url: config['UploadImages_API'] //上传接口
+		    ,data:{type:'Article'}
+		    ,done: function(res){
+		      //上传完毕回调
+		      layer.msg(res.errormsg);
+		      if(res.errorcode==0){
+		    	$('.ArticleImageEle').attr('src',res.data);
+		    	$('.PicPath').val(res.data);
+		      }
+		    }
+		    ,error: function(){
+		      //请求异常回调
+		      layer.msg(err);
+		    }
+		  });
+
+		  
+		  //监听提交
+		  form.on('submit(AddContentSubmit)', function(data){
+
+		    //data.field.ArticleImage=ArticleImage;
+
+		  	var data=data.field;
+		  	delete data.file;
+
+		  	//模型id
+		  	data.model_id=model_id;
+
+		  	if(window.ue){
+		  		data.content=ue.getContent();
+		  	}
+
+		  	$.ajax({
+		  		url:config['Article_API'],
+		  		type:'post',
+		  		dataType:'json',
+		  		data:data,
+		  		success:function(data){
+		  			top.layer.msg(data.errormsg);
+		  			if(data.errorcode==0){
+		  				location.reload();
+		  			}
+		  		},
+		  		error:function(err){
+		  			layer.msg(err.message || err.responseText);
+		  		}
+		  	})
+
+		    return false;
+		  });
+		 
+		  
+		});
+
+		
+  	</script>
+</body>
+</html>

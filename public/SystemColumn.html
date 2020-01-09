@@ -1,0 +1,395 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>网站信息</title>
+	<link rel="stylesheet" href="/static/lib/layui/css/layui.css">
+	<style>
+	/*reset*/
+	body,li,ul,h1,h2,h3,h4,h5,h6,p{
+		padding:0;
+		margin:0;
+		font-size:14px;
+	}
+	ul,li{
+		list-style:none;
+	}
+	a{
+		text-decoration: none;
+		color:#000;
+	}
+
+	/*导航*/
+	.nav{
+		padding: 15px 20px;
+	    box-shadow: 0 2px 4px rgba(0,0,0,.08);
+	    margin-bottom: 20px;
+	    position: fixed;
+	    z-index: 100;
+	    width: 100%;
+	    background: #fff;
+	}
+	.nav-ul{
+		overflow: hidden;
+	}
+	.nav-item{
+		float: left;
+		color:#606266;
+		font-size:15px;
+	}
+	.nav-link{
+		color:#303133;
+		font-weight: bold;
+	}
+
+
+	.main{
+		padding:50px 8px 0 8px;
+	}
+	.header{
+		padding:20px 0 0 0;
+	}
+	
+	
+	#SystemColumnPanel{
+		display: none;
+		padding:15px 15px 0 15px;
+	}
+	body .ShowSystemColumnPanel #SystemColumnPanel{
+		display: block;
+	}
+	
+	/**layui样式覆盖*/
+	.layui-form-select dl{
+		max-height: 225px;
+	}
+
+	</style>
+</head>
+<body class="websiteInfo">
+
+	<!-- 导航 -->
+	<div class="nav">
+		<ul class="nav-ul">
+			<li class="nav-item"><a href="/" class="nav-link">首页</a><i class="layui-icon layui-icon-right"></i></li>
+			<li class="nav-item">系统栏目</li>
+		</ul>
+	</div>
+
+	<div class="main">
+
+		<div class="header">
+			<button type="button" class="layui-btn layui-btn-normal AddSystemColumn">添加栏目</button>
+			<button type="button" class="layui-btn layui-btn-danger DeleteSystemColumn">删除栏目</button>
+		</div>
+		<table class="layui-hide" id="SystemColumnTable" lay-filter="SystemColumnTable"></table>
+
+	</div>
+	
+
+	<!-- 添加、编辑面板 -->
+	<div id="SystemColumnPanel">
+		<div class="layui-form" action="" lay-filter="SystemColumnForm">
+	        <div class="layui-form-item">
+	            <label class="layui-form-label">栏目名称</label>
+	            <div class="layui-input-inline">
+	                <input type="text" name="SystemColumnName" required  lay-verify="required" placeholder="栏目名称" autocomplete="off" class="layui-input">
+	            </div>
+	        </div>
+	        <div class="layui-form-item">
+	            <label class="layui-form-label">所属栏目</label>
+	            <div class="layui-input-block">
+	            <select name="pid" lay-verify="required" id="category"></select>
+	            </div>
+	        </div>
+	        <div class="layui-form-item">
+	            <label class="layui-form-label">链接页面</label>
+	            <div class="layui-input-block">
+	            <input type="text" name="SystemColumnURL" placeholder="URL" autocomplete="off" class="layui-input">
+	            </div>
+	        </div>
+	        <div class="layui-form-item">
+	            <label class="layui-form-label">图标</label>
+	            <div class="layui-input-block">
+	            <input type="text" name="SystemColumnIcon" placeholder="图标" autocomplete="off" required class="layui-input">
+	            </div>
+	        </div>
+	        <div class="layui-form-item">
+	            <label class="layui-form-label">是否显示</label>
+	            <div class="layui-input-block">
+	            	<input type="radio" name="SystemState" value="1" title="是" checked>
+	            	<input type="radio" name="SystemState" value="0" title="否">
+	            </div>
+	        </div>
+	        <div class="layui-form-item layui-form-text">
+	            <label class="layui-form-label">排序</label>
+	            <div class="layui-input-block">
+	            <input type="text" name="SystemColumnSort" placeholder="排序" autocomplete="off" class="layui-input" style="width:150px;" value="0">
+	            </div>
+	        </div>
+	        <div class="layui-form-item">
+	            <div class="layui-input-block">
+	            <button class="layui-btn layui-btn-normal" lay-submit lay-filter="SystemColumnSubmit">立即提交</button>
+	            <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+	            </div>
+	        </div>
+	        <input type="hidden" name="id" value="">
+	    </div>
+	</div>
+
+
+	<script type="text/html" id="barDemo">
+	  <a class="layui-btn layui-btn-xs" lay-event="edit">编辑</a>
+	  <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a>
+	</script>
+	
+	<script src="/static/js/jquery.min.js"></script>
+	<script src="/static/js/config.js"></script>
+	<script>
+		var option='<option value="0">顶级栏目</option>';
+	  	function createOption(arr,level=1){
+	  		if(!arr || !arr.length)return false;
+	  		for(var i=0,len=arr.length;i<len;i++){
+	  			var str=createStr(level);
+	  			option+='<option value='+arr[i].id+'>--'+str+arr[i].SystemColumnName+'</option>';
+	  			if(arr[i].children && arr[i].children.length>=1){
+	  				createOption(arr[i].children,level+1);
+	  			}
+	  		}
+	  		return option;
+	  	}
+
+	  	function createStr(num,str='--'){
+	  		var arr=new Array(num);
+	  		return arr.join(str);
+	  	}
+
+		$.ajax({
+			url:config['GetSystemColumn_API'],
+			async:false,//同步
+			success:function(data){
+				var optionstr=createOption(data) || option;
+				$('#category').html(optionstr);
+			}
+		})
+	</script>
+	<script src="/static/lib/layui/layui.js"></script>
+	<script>
+  	layui.use(['table','form'], function(){
+
+	  var table = layui.table,
+	  		form=layui.form;
+	  
+	  table.render({
+	    elem: '#SystemColumnTable'
+	    ,id:'SystemColumnTable'
+	    ,url:config['GetSystemColumnList_API']
+	    ,title: '系统栏目'
+	    ,parseData:function(res){
+	    	return {
+		      "code": res.errorcode, //解析接口状态
+		      "msg": res.errormsg, //解析提示文本
+		      "data": res.data //解析数据列表
+		    };
+	    }
+	    ,cols: [[
+	      {type: 'checkbox', fixed: 'left'}
+	      ,{field:'SystemColumnName', title:'栏目标题',templet:function(d){
+	      	var level=d.level,str='',paddingLeft=level*25;
+	      	if(level>0){
+		  		str='|';
+		  		for(var i=0;i<level;i++){
+		  			str+='—';
+		  		}
+		  	}
+	      	return '<span style="padding-left:'+paddingLeft+'px;">'+str+d.SystemColumnName+'</span>';
+	      }}
+	      ,{field:'SystemColumnURL', title:'栏目URL'}
+	      ,{field:'SystemState', title:'状态',templet:function(d){
+	      	if(d.SystemState==1){//隐藏
+	      		return '<input type="checkbox" name="SystemState" value="'+d.id+'" lay-skin="switch" lay-text="显示|隐藏" lay-filter="SystemState" checked="checked">';
+	      	}else{//显示
+	      		return '<input type="checkbox" name="SystemState" value="'+d.id+'" lay-skin="switch" lay-text="显示|隐藏" lay-filter="SystemState">';
+	      	}
+	      },width:150}
+	      ,{field:'SystemColumnSort', title:'排序',edit:'text',width:80}
+	      ,{fixed: 'right', title:'操作', toolbar: '#barDemo', width:150}
+	    ]]
+	    ,page: false
+	  });
+
+	  //提交表单数据
+	  form.on('submit(SystemColumnSubmit)',function(data){
+
+	  	$.ajax({
+			url:config['SystemColumn_API'],
+			data:data.field,
+			type:'post',
+			dataType:'json',
+			success:function(res){
+				top.layer.msg(res.errormsg);
+				if(res.errorcode==0){
+					location.reload();
+				}
+			}
+		})
+	  	return false;
+	  })
+
+
+	  //添加栏目点击事件
+	  $('.AddSystemColumn').click(function(){
+
+	  	init();
+
+	  	layer.open({
+	  		title:'添加栏目',
+			type: 1,
+			area:['500px'],
+			skin:'ShowSystemColumnPanel',
+			content: $('#SystemColumnPanel')
+		});
+
+	  })
+	  
+
+	  //系统栏目状态编辑事件
+	  	form.on('switch(SystemState)',function(data){
+
+	  		var value=data.elem.checked?1:0;
+	  		$.ajax({
+				url:config['SystemColumn_API'],
+				data:{id:data.value,SystemState:value},
+				type:'post',
+				dataType:'json',
+				success:function(res){
+					if(res.errorcode!=0){
+						layer.msg(res.errormsg);
+					}
+				}
+			})
+
+	  	})
+
+
+	  	//表格排序编辑事件
+	  	table.on('edit(SystemColumnTable)', function(obj){
+
+	  		$.ajax({
+				url:config['SystemColumn_API'],
+				data:{id:obj.data.id,SystemColumnSort:obj.value},
+				type:'post',
+				dataType:'json',
+				success:function(res){
+					if(res.errorcode!=0){
+						layer.msg(res.errormsg);
+					}
+				}
+			})
+
+		});
+
+	  //点击删除多个系统栏目
+	  $('.DeleteSystemColumn').click(function(){
+
+	  		layer.confirm('删除将不可恢复，您确定删除吗？', function(index){
+
+	  			//获取选中的数据
+			  	var checkStatus = table.checkStatus('SystemColumnTable');
+			  	var CheckedData=checkStatus.data;
+			  	var idstr='';
+
+			  	//拼接删除的id字符串
+			  	for(var i=0,len=CheckedData.length;i<len;i++){
+			  		idstr+=','+CheckedData[i].id;
+			  	}
+			  	idstr=idstr.substring(1);
+
+			  	//发起删除请求
+		  		$.ajax({
+					url:config['DeleteSystemColumn_API'],
+					data:{id:idstr},
+					type:'post',
+					dataType:'json',
+					success:function(res){
+						layer.msg(res.errormsg);
+						if(res.errorcode==0){
+							table.reload('SystemColumnTable',{
+								url:config['GetSystemColumn_API']
+							})
+						}
+					}
+				})
+
+
+			});
+
+
+	  })
+
+	  //监听行工具事件
+	  table.on('tool(SystemColumnTable)', function(obj){
+
+	    var data = obj.data;
+
+	    if(obj.event === 'del'){
+
+	      layer.confirm('确定删除吗？', function(index){
+	      	$.ajax({
+				url:config['DeleteSystemColumn_API'],
+				data:{id:data.id},
+				dataType:'json',
+				success:function(res){
+					var res=res.data;
+					obj.del();
+	        		layer.close(index);
+				}
+			})
+	      });
+
+	    } else if(obj.event === 'edit'){
+
+	    	init();
+	    	$.ajax({
+				url:config['GetSystemColumnById_API'],
+				data:{id:data.id},
+				dataType:'json',
+				success:function(res){
+					var res=res.data;
+					console.log(res);
+					form.val('SystemColumnForm',res);
+				}
+			})
+	     	layer.open({
+		  		title:'编辑栏目',
+				type: 1,
+				area:['500px'],
+				skin:'ShowSystemColumnPanel',
+				content: $('#SystemColumnPanel')
+			});
+
+	    }
+
+	  });
+
+
+
+	  function init(){
+
+	  	form.val('SystemColumnForm',{
+	  		SystemColumnName:'',
+	  		SystemColumnURL:'',
+	  		SystemState:1,
+	  		SystemColumnSort:0,
+	  		id:''
+	  	})
+
+	  }
+
+
+
+
+	});
+	</script>
+</body>
+</html>
