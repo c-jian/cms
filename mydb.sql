@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1:3306
--- Generation Time: 2020-01-08 10:25:36
+-- Generation Time: 2020-01-10 10:05:40
 -- 服务器版本： 5.7.21
 -- PHP Version: 5.6.35
 
@@ -156,7 +156,7 @@ INSERT INTO `config` (`id`, `config_name`, `config_value`) VALUES
 (3, 'thumbnail_config', '{\"ThumbnailType\":\"0\",\"ThumbnailProductWidth\":\"400\",\"ThumbnailProductHeight\":\"400\",\"ThumbnailArticleWidth\":\"300\",\"ThumbnailArticleHeight\":\"300\",\"ThumbnailImagesWidth\":\"400\",\"ThumbnailImagesHeight\":\"400\"}'),
 (4, 'watermark_config', '{\"WatermarkType\":\"0\",\"WatermarkPosition\":\"2\",\"WatermarkContent\":\"\\u6c34\\u5370\\u6587\\u5b57\",\"WatermarkFontFamily\":\"\",\"WatermarkFontSize\":\"\",\"WatermarkAngle\":\"\",\"watermarkColor\":\"\",\"WatermarkTransparency\":\"50\",\"WatermarkImage\":\"\\\\uploads\\\\watermark\\\\20191108\\\\8c20e535a286b6f239a54a068326a9e0.jpg\"}'),
 (5, 'system_config', '{\"Editor\":\"UEditor\",\"WebsiteCopy\":\"\\u7248\\u6743\\u4fe1\\u606f\"}'),
-(6, 'email_config', '{\"Sender\":\"1819540291@qq.com\",\"SenderEmailAccount\":\"\",\"SenderEmailPassword\":\"\",\"SMTPServerAddress\":\"\",\"ServerPort\":\"25\",\"SendMode\":\"tls\"}');
+(6, 'email_config', '{\"SenderEmailAccount\":\"1819540291@qq.com\",\"SenderEmailPassword\":\"rdyjcluwpiuacgjb\",\"SMTPServerAddress\":\"smtp.qq.com\",\"ServerPort\":\"25\"}');
 
 -- --------------------------------------------------------
 
@@ -449,7 +449,7 @@ CREATE TABLE IF NOT EXISTS `todo_list` (
   `finished` tinyint(4) DEFAULT '0' COMMENT '1：完成 0：未完成',
   `todo_list_category_id` int(11) DEFAULT NULL COMMENT '所属分类id',
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM AUTO_INCREMENT=11 DEFAULT CHARSET=utf8;
+) ENGINE=MyISAM AUTO_INCREMENT=15 DEFAULT CHARSET=utf8;
 
 --
 -- 转存表中的数据 `todo_list`
@@ -463,7 +463,11 @@ INSERT INTO `todo_list` (`id`, `SEOTitle`, `SEOKeyword`, `SEODescription`, `titl
 (7, '', '', '', '查找linux硬盘占用多的目录', '2', '<p>https://www.cnblogs.com/llxpbbs/articles/11088922.html</p>', 0, 4),
 (8, '', '', '', '推荐两部电影', '4', '<p>对了，推荐两部美国电影。之前我看海龟救援的时候想如果有一种技术可以清除所以海洋的垃圾就好了。然后就找到《特种部队之眼镜蛇崛起》，《超验骇客》。这两部都讲的纳米技术的使用，所以如果有这种技术那么去除所有垃圾就不成问题了……</p>', 0, 4),
 (9, '', '', '', '整理资料、文件等', '1', '', 0, 6),
-(10, '', '', '', 'Linux上传下载', '2', '<p>yum -y install&nbsp;lrzsz</p><p>rz 上传</p><p>sz 下载</p>', 0, 4);
+(10, '', '', '', 'Linux上传下载', '2', '<p>yum -y install&nbsp;lrzsz</p><p>rz 上传</p><p>sz 下载</p>', 0, 4),
+(11, '', '', '', '资料链接', '1', '<p><span>一个想帮你总结所有类型的上传漏洞的靶场：</span>https://github.com/c0ny1/upload-labs</p><p>php开源商场：https://github.com/gongfuxiang/shopxo</p><p>php安全：https://github.com/TideSec/WDScanner</p><p>前端好文：http://www.pingan8787.com/archives/&nbsp; &nbsp;https://imweb.io/</p><p>性能优化：https://www.cnblogs.com/pingan8787/p/11838028.html</p><p>阿里社区好文：https://developer.aliyun.com/article/739170?spm=a1z389.11499242.0.0.65452413dnZ7Al&amp;utm_content=g_1000096277</p><p>图片加解密：https://blog.csdn.net/xfgryujk/article/details/81058247</p><p>https://segmentfault.com/a/1190000002393107&nbsp; curl</p><p>https://www.jianshu.com/p/8cdbe4f4b533&nbsp; &nbsp;node linux安装</p><p>CGI和FastCGI https://www.cnblogs.com/tssc/p/10255590.html</p><p>https://www.cnblogs.com/xzwblog/p/7255364.html 负载均衡，分布式，集群</p><p>https://www.cnblogs.com/clsn/p/8150036.html&nbsp; mysql主从复制</p><p>非常好的文章：https://www.cnblogs.com/PeunZhang/p/3407453.html</p><p>对node工程进行压力测试和性能分析：https://juejin.im/post/5b827cbbe51d4538c021f2da</p><p>node应用排查手册：https://github.com/aliyun-node/Node.js-Troubleshooting-Guide</p><p>mqtt通讯流程：https://www.cnblogs.com/xiaohanlin/p/8683503.html</p><p><span>nodejs深入学习系列之libuv基础篇(一)：</span>https://zhuanlan.zhihu.com/p/86242398</p><p>tcp、http、socket：https://segmentfault.com/a/1190000014044351?utm_source=tag-newest</p><p><span>Node 案发现场揭秘 —— Coredump 还原线上异常：</span>https://zhuanlan.zhihu.com/p/41178823?spm=a2c4g.11186623.2.22.42a06df2LZjDEW</p><p><span>NodeJS的代码调试和性能调优：</span>https://yq.aliyun.com/articles/379053</p><p>node应用内存泄露分析方法论：https://help.aliyun.com/document_detail/64011.html</p><p>alinode新手：https://segmentfault.com/a/1190000016883737</p><p>node密集型CPU解决方案：https://www.cnblogs.com/peiyu1988/p/6700737.html</p><p>node cpu密集型任务：https://blog.csdn.net/shmnh/article/details/31972071</p><p>cpu过载内存溢出：https://blog.csdn.net/chenguohong88/article/details/79827763</p><p>php开源程序：https://juejin.im/post/5d0f3793518825324e5d7d64</p><p>免费的国外在线客服系统：https://dashboard.tawk.to/login</p><p>好文：https://blog.jimmylv.info/2017-06-30-serverless-in-action-build-personal-reading-statistics-system/</p><p>看看php：https://lvwenhan.com/sort/php</p><p><br></p>', 0, 5),
+(12, '', '', '', '英语安排', '1', '<p>1、精听练习</p><p>2、预习</p>', 0, 6),
+(13, '', '', '', 'QQ邮箱授权码', '1', '<p><span>账号：</span>1819540291@qq.com</p><p>服务器：smtp.qq.com</p><p><span>密码：rdyj</span><span>cluw</span><span>piua</span><span>cgjb</span></p>', 0, 5),
+(14, '', '', '', 'PHP发送邮件', '2', '<p>nette/mail ： http://packagist.p2hp.com/packages/nette/mail</p><p>PHPEmail：https://github.com/PHPMailer/PHPMailer/&nbsp; &nbsp; &nbsp; &nbsp; &nbsp;https://www.cnblogs.com/woider/p/6980456.html</p><p>第一个没有被列入垃圾邮箱，支持html，附件</p><p>1、tls和ssl&nbsp;&nbsp;https://www.php.net/manual/zh/function.stream-context-create.php</p><p>2、发件人，收件人的显示</p><p><br></p>', 0, 5);
 
 -- --------------------------------------------------------
 

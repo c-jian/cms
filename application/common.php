@@ -13,6 +13,10 @@
 
 use think\Db;
 
+use Nette\Mail\Message;
+use Nette\Mail\SmtpMailer;
+use Nette\Utils\AssertionException;
+
 
 function getConfig($type){
 
@@ -31,6 +35,40 @@ function getConfig($type){
 
 }
 
+
+function SendEmail($to='',$title='',$con='',$attachment=null){
+
+    if($to==='' || $title==='')return false;
+
+    $config=getConfig('email');
+    $EmailConfig=json_decode($config,true);
+    
+    $mail = new Message();
+    try {
+        $mail->setFrom('Kris '.'<'.$EmailConfig['SenderEmailAccount'].'>')
+            ->addTo($to)
+            ->setSubject($title)
+            ->setHTMLBody($con);
+
+        if($attachment){
+          $mail->addAttachment($attachment);  
+        }
+
+        $mailer = new SmtpMailer([
+            'host'     => $EmailConfig['SMTPServerAddress'],
+            'username' => $EmailConfig['SenderEmailAccount'],
+            'password' => $EmailConfig['SenderEmailPassword'],
+            //'secure' => $EmailConfig['SendMode'],
+            'port' => $EmailConfig['ServerPort']
+        ]);
+        $mailer->send($mail);
+
+        return true;
+    } catch (AssertionException $e) {
+        return false;
+    }
+
+}
 
 function getTree($arr,$pid=0,$level=0)
 {

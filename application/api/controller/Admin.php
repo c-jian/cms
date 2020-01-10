@@ -7,6 +7,7 @@ use PHPExcel_IOFactory;
 use PHPExcel;
 use think\Env;
 
+
 session_start();
 class Admin
 {
@@ -1853,6 +1854,13 @@ class Admin
             ]);
         }
 
+
+    }
+
+
+    public function Email(){
+        
+        SendEmail('project-12@sresky.com','title','content');
 
     }
 
